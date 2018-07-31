@@ -48,22 +48,28 @@ class Figure
      * @ORM\JoinColumn(nullable=false)
      */
     private $user;
-
-    /**
-     * @ORM\ManyToOne(targetEntity="App\Entity\Group", inversedBy="figures")
-     * @ORM\JoinColumn(nullable=false)
-     */
-    private $groupFigure;
-
+    
     /**
      * @ORM\OneToMany(targetEntity="App\Entity\Image", mappedBy="figure")
      */
     private $images;
 
+    /**
+     * @ORM\ManyToOne(targetEntity="App\Entity\GroupFigure", inversedBy="figures")
+     * @ORM\JoinColumn(nullable=false)
+     */
+    private $groupFigure;
+
+    /**
+     * @ORM\OneToMany(targetEntity="App\Entity\Video", mappedBy="figure", orphanRemoval=true)
+     */
+    private $videos;
+
     public function __construct()
     {
         $this->comments = new ArrayCollection();
         $this->images = new ArrayCollection();
+        $this->videos = new ArrayCollection();
     }
 
     public function getId()
@@ -161,19 +167,7 @@ class Figure
 
         return $this;
     }
-
-    public function getGroupFigure(): ?Group
-    {
-        return $this->groupFigure;
-    }
-
-    public function setGroupFigure(?Group $groupFigure): self
-    {
-        $this->groupFigure = $groupFigure;
-
-        return $this;
-    }
-
+    
     /**
      * @return Collection|Image[]
      */
@@ -199,6 +193,49 @@ class Figure
             // set the owning side to null (unless already changed)
             if ($image->getFigure() === $this) {
                 $image->setFigure(null);
+            }
+        }
+
+        return $this;
+    }
+
+    public function getGroupFigure(): ?GroupFigure
+    {
+        return $this->groupFigure;
+    }
+
+    public function setGroupFigure(?GroupFigure $groupFigure): self
+    {
+        $this->groupFigure = $groupFigure;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|Video[]
+     */
+    public function getVideos(): Collection
+    {
+        return $this->videos;
+    }
+
+    public function addVideo(Video $video): self
+    {
+        if (!$this->videos->contains($video)) {
+            $this->videos[] = $video;
+            $video->setFigure($this);
+        }
+
+        return $this;
+    }
+
+    public function removeVideo(Video $video): self
+    {
+        if ($this->videos->contains($video)) {
+            $this->videos->removeElement($video);
+            // set the owning side to null (unless already changed)
+            if ($video->getFigure() === $this) {
+                $video->setFigure(null);
             }
         }
 

@@ -31,6 +31,12 @@ class Video
      */
     private $updated_at;
 
+    /**
+     * @ORM\ManyToOne(targetEntity="App\Entity\Figure", inversedBy="videos")
+     * @ORM\JoinColumn(nullable=false)
+     */
+    private $figure;
+
     public function getId()
     {
         return $this->id;
@@ -68,6 +74,18 @@ class Video
     public function setUpdatedAt(\DateTimeInterface $updated_at): self
     {
         $this->updated_at = $updated_at;
+
+        return $this;
+    }
+
+    public function getFigure(): ?Figure
+    {
+        return $this->figure;
+    }
+
+    public function setFigure(?Figure $figure): self
+    {
+        $this->figure = $figure;
 
         return $this;
     }

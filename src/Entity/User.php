@@ -62,16 +62,17 @@ class User
      * @ORM\OneToMany(targetEntity="App\Entity\Comment", mappedBy="user", orphanRemoval=true)
      */
     private $comments;
-
-    /**
-     * @ORM\OneToOne(targetEntity="App\Entity\Group", mappedBy="User", cascade={"persist", "remove"})
-     */
-    private $groupFigure;
+    
 
     /**
      * @ORM\OneToMany(targetEntity="App\Entity\Figure", mappedBy="user", orphanRemoval=true)
      */
     private $figures;
+
+    /**
+     * @ORM\OneToOne(targetEntity="App\Entity\GroupFigure", mappedBy="user", cascade={"persist", "remove"})
+     */
+    private $groupFigure;
 
     public function __construct()
     {
@@ -211,49 +212,18 @@ class User
         return $this;
     }
 
-    public function getGroupFigure(): ?Group
+    public function getGroupFigure(): ?GroupFigure
     {
         return $this->groupFigure;
     }
 
-    public function setGroupFigure(Group $groupFigure): self
+    public function setGroupFigure(GroupFigure $groupFigure): self
     {
         $this->groupFigure = $groupFigure;
 
         // set the owning side of the relation if necessary
         if ($this !== $groupFigure->getUser()) {
             $groupFigure->setUser($this);
-        }
-
-        return $this;
-    }
-
-    /**
-     * @return Collection|Figure[]
-     */
-    public function getFigures(): Collection
-    {
-        return $this->figures;
-    }
-
-    public function addFigure(Figure $figure): self
-    {
-        if (!$this->figures->contains($figure)) {
-            $this->figures[] = $figure;
-            $figure->setUser($this);
-        }
-
-        return $this;
-    }
-
-    public function removeFigure(Figure $figure): self
-    {
-        if ($this->figures->contains($figure)) {
-            $this->figures->removeElement($figure);
-            // set the owning side to null (unless already changed)
-            if ($figure->getUser() === $this) {
-                $figure->setUser(null);
-            }
         }
 
         return $this;

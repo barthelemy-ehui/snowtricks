@@ -5,10 +5,13 @@ namespace App\Entity;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * @ORM\Entity(repositoryClass="App\Repository\VideoRepository")
+ * @ORM\Entity(repositoryClass="App\Repository\ResourceRepository")
  */
-class Video
+class Resource
 {
+    const IMAGE = 'image';
+    const VIDEO = 'video';
+    
     /**
      * @ORM\Id()
      * @ORM\GeneratedValue()
@@ -22,6 +25,11 @@ class Video
     private $path;
 
     /**
+     * @ORM\Column(type="string", length=45)
+     */
+    private $type;
+
+    /**
      * @ORM\Column(type="datetime")
      */
     private $created_at;
@@ -32,10 +40,9 @@ class Video
     private $updated_at;
 
     /**
-     * @ORM\ManyToOne(targetEntity="App\Entity\Figure", inversedBy="videos")
-     * @ORM\JoinColumn(nullable=false)
+     * @ORM\OneToOne(targetEntity="App\Entity\Trick", inversedBy="resource", cascade={"persist", "remove"})
      */
-    private $figure;
+    private $trick;
 
     public function getId()
     {
@@ -50,6 +57,18 @@ class Video
     public function setPath(string $path): self
     {
         $this->path = $path;
+
+        return $this;
+    }
+
+    public function getType(): ?string
+    {
+        return $this->type;
+    }
+
+    public function setType(string $type): self
+    {
+        $this->type = $type;
 
         return $this;
     }
@@ -78,14 +97,14 @@ class Video
         return $this;
     }
 
-    public function getFigure(): ?Figure
+    public function getTrick(): ?Trick
     {
-        return $this->figure;
+        return $this->trick;
     }
 
-    public function setFigure(?Figure $figure): self
+    public function setTrick(?Trick $trick): self
     {
-        $this->figure = $figure;
+        $this->trick = $trick;
 
         return $this;
     }

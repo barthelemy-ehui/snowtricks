@@ -62,22 +62,22 @@ class User
      * @ORM\OneToMany(targetEntity="App\Entity\Comment", mappedBy="user", orphanRemoval=true)
      */
     private $comments;
-    
 
     /**
-     * @ORM\OneToMany(targetEntity="App\Entity\Figure", mappedBy="user", orphanRemoval=true)
+     * @ORM\OneToMany(targetEntity="App\Entity\Category", mappedBy="User")
      */
-    private $figures;
+    private $categories;
 
     /**
-     * @ORM\OneToOne(targetEntity="App\Entity\GroupFigure", mappedBy="user", cascade={"persist", "remove"})
+     * @ORM\OneToMany(targetEntity="App\Entity\Trick", mappedBy="User")
      */
-    private $groupFigure;
+    private $tricks;
 
     public function __construct()
     {
         $this->comments = new ArrayCollection();
-        $this->figures = new ArrayCollection();
+        $this->categories = new ArrayCollection();
+        $this->tricks = new ArrayCollection();
     }
 
     public function getId()
@@ -212,18 +212,63 @@ class User
         return $this;
     }
 
-    public function getGroupFigure(): ?GroupFigure
+    /**
+     * @return Collection|Category[]
+     */
+    public function getCategories(): Collection
     {
-        return $this->groupFigure;
+        return $this->categories;
     }
 
-    public function setGroupFigure(GroupFigure $groupFigure): self
+    public function addCategory(Category $category): self
     {
-        $this->groupFigure = $groupFigure;
+        if (!$this->categories->contains($category)) {
+            $this->categories[] = $category;
+            $category->setUser($this);
+        }
 
-        // set the owning side of the relation if necessary
-        if ($this !== $groupFigure->getUser()) {
-            $groupFigure->setUser($this);
+        return $this;
+    }
+
+    public function removeCategory(Category $category): self
+    {
+        if ($this->categories->contains($category)) {
+            $this->categories->removeElement($category);
+            // set the owning side to null (unless already changed)
+            if ($category->getUser() === $this) {
+                $category->setUser(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|Trick[]
+     */
+    public function getTricks(): Collection
+    {
+        return $this->tricks;
+    }
+
+    public function addTrick(Trick $trick): self
+    {
+        if (!$this->tricks->contains($trick)) {
+            $this->tricks[] = $trick;
+            $trick->setUser($this);
+        }
+
+        return $this;
+    }
+
+    public function removeTrick(Trick $trick): self
+    {
+        if ($this->tricks->contains($trick)) {
+            $this->tricks->removeElement($trick);
+            // set the owning side to null (unless already changed)
+            if ($trick->getUser() === $this) {
+                $trick->setUser(null);
+            }
         }
 
         return $this;

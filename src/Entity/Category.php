@@ -7,9 +7,9 @@ use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * @ORM\Entity(repositoryClass="App\Repository\GroupFigureRepository")
+ * @ORM\Entity(repositoryClass="App\Repository\CategoryRepository")
  */
-class GroupFigure
+class Category
 {
     /**
      * @ORM\Id()
@@ -39,19 +39,18 @@ class GroupFigure
     private $updated_at;
 
     /**
-     * @ORM\OneToOne(targetEntity="App\Entity\User", inversedBy="groupFigure2", cascade={"persist", "remove"})
-     * @ORM\JoinColumn(nullable=false)
+     * @ORM\ManyToOne(targetEntity="App\Entity\User", inversedBy="categories")
      */
-    private $user;
+    private $User;
 
     /**
-     * @ORM\OneToMany(targetEntity="App\Entity\Figure", mappedBy="groupFigure2", orphanRemoval=true)
+     * @ORM\OneToMany(targetEntity="App\Entity\Trick", mappedBy="category")
      */
-    private $figures;
+    private $tricks;
 
     public function __construct()
     {
-        $this->figures = new ArrayCollection();
+        $this->tricks = new ArrayCollection();
     }
 
     public function getId()
@@ -109,41 +108,41 @@ class GroupFigure
 
     public function getUser(): ?User
     {
-        return $this->user;
+        return $this->User;
     }
 
-    public function setUser(User $user): self
+    public function setUser(?User $User): self
     {
-        $this->user = $user;
+        $this->User = $User;
 
         return $this;
     }
 
     /**
-     * @return Collection|Figure[]
+     * @return Collection|Trick[]
      */
-    public function getFigures(): Collection
+    public function getTricks(): Collection
     {
-        return $this->figures;
+        return $this->tricks;
     }
 
-    public function addFigure(Figure $figure): self
+    public function addTrick(Trick $trick): self
     {
-        if (!$this->figures->contains($figure)) {
-            $this->figures[] = $figure;
-            $figure->setGroupFigure2($this);
+        if (!$this->tricks->contains($trick)) {
+            $this->tricks[] = $trick;
+            $trick->setCategory($this);
         }
 
         return $this;
     }
 
-    public function removeFigure(Figure $figure): self
+    public function removeTrick(Trick $trick): self
     {
-        if ($this->figures->contains($figure)) {
-            $this->figures->removeElement($figure);
+        if ($this->tricks->contains($trick)) {
+            $this->tricks->removeElement($trick);
             // set the owning side to null (unless already changed)
-            if ($figure->getGroupFigure2() === $this) {
-                $figure->setGroupFigure2(null);
+            if ($trick->getCategory() === $this) {
+                $trick->setCategory(null);
             }
         }
 

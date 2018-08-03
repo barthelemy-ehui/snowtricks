@@ -1,0 +1,22 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Ensemble des mouvements de figures{% endblock %}
+
+{% block body %}
+<!-- La liste des tricks à afficher-->
+    <div class="container">
+    {% for trick in tricks %}
+        <div class="item">
+            <div>
+                <strong>{{ trick.name }}</strong>
+            </div>
+            <div>
+                <p>{{ trick.description }}</p>
+            </div>
+            <div>
+                <em>{{ trick.user.username }}</em> - <em>{{ trick.category.name }}</em>
+            </div>
+        </div>
+    {% endfor %}
+    </div>
+{% endblock %}

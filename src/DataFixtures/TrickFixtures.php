@@ -23,6 +23,7 @@ class TrickFixtures extends Fixture implements /*DependentFixtureInterface,*/ Or
             $trick->setDescription($faker->sentence);
             $trick->setCreatedAt($faker->dateTime);
             $trick->setUpdatedAt($faker->dateTime);
+            $trick->setResource($faker->imageUrl());
             $trick->setUser($this->getReference(UserFixtures::USER));
             $trick->setCategory($this->getReference(CategoryFixtures::CATEGORY));
             $trick->setSlug($faker->slug);

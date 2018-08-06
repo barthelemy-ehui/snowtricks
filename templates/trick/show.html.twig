@@ -1,0 +1,17 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}{{ trick.name }}{% endblock %}
+
+{% block body %}
+    <div>
+        <strong>{{ trick.name }}</strong>
+    </div>
+    <div>
+        <p>
+            {{ trick.description }}
+        </p>
+    </div>
+    <div>
+        <em>{{ trick.user.username }}</em> | <em>{{ trick.category.name }}</em>
+    </div>
+{% endblock %}

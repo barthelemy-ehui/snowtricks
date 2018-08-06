@@ -29,4 +29,18 @@ class TrickController extends Controller
             'tricks' => $this->trickRepository->findAll(),
         ]);
     }
+    
+    /**
+     * @Route("/trick/{slug}", name="show_trick")
+     */
+    public function show($slug) {
+        
+        $trick = $this->trickRepository->findOneBy([
+            'slug'=>$slug
+        ]);
+        
+        return $this->render('trick/show.html.twig', [
+            'trick' => $trick
+        ]);
+    }
 }

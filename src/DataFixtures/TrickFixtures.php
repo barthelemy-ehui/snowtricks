@@ -19,7 +19,7 @@ class TrickFixtures extends Fixture implements /*DependentFixtureInterface,*/ Or
         
         for($i=0;$i<2;$i++){
             $trick = new Trick();
-            $trick->setName($faker->name);
+            $trick->setName($faker->sentence());
             $trick->setDescription($faker->sentence);
             $trick->setCreatedAt($faker->dateTime);
             $trick->setUpdatedAt($faker->dateTime);

@@ -1,6 +1,6 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Ensemble des mouvements de figures{% endblock %}
+{% block title %}Ensemble des figures{% endblock %}
 
 {% block body %}
 <!-- La liste des tricks à afficher-->
@@ -17,6 +17,7 @@
                 <em>{{ trick.user.username }}</em> - <em>{{ trick.category.name }}</em>
             </div>
         </div>
+        <hr/>
     {% endfor %}
     </div>
 {% endblock %}

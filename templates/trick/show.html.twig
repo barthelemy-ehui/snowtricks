@@ -4,8 +4,19 @@
 
 {% block body %}
     <div>
-        <strong>{{ trick.name }}</strong>
+        <!-- Todo: à afficher seulement si on est connecter -->
+        <a href="{{ path('trick_edit',{'slug': trick.slug}) }}">Editer</a>
     </div>
+        <div>
+            <strong>{{ trick.name }}</strong>
+        </div>
+    {% if trick.resource %}
+        <div>
+            <!-- todo afficher selon si c'est video ou image-->
+            <img src="{{ files_directory ~ trick.resource }}" alt="">
+        </div>
+    {% endif %}
+
     <div>
         <p>
             {{ trick.description }}
@@ -13,5 +24,28 @@
     </div>
     <div>
         <em>{{ trick.user.username }}</em> | <em>{{ trick.category.name }}</em>
+    </div>
+
+    <br/>
+    <div>
+        <strong>
+            Discussions:
+        </strong>
+    </div>
+    <br/>
+    <div>
+        {% for comment in trick.comments %}
+        <div>
+            <div>
+                {{ comment.content }}
+            </div>
+            <div>
+                <strong>Auteur:</strong><em>{{ comment.user.username }}</em>
+                <strong>Date:</strong><em>{{ comment.createdat|date('d-m-Y') }}</em>
+            </div>
+        </div>
+        <br/>
+        {% endfor %}
+        {{ include('trick/_form.html.twig') }}
     </div>
 {% endblock %}

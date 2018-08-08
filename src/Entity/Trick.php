@@ -5,6 +5,7 @@ namespace App\Entity;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * @ORM\Entity(repositoryClass="App\Repository\TrickRepository")
@@ -20,6 +21,7 @@ class Trick
 
     /**
      * @ORM\Column(type="string", length=255)
+     * @Assert\NotBlank()
      */
     private $name;
 
@@ -37,12 +39,7 @@ class Trick
      * @ORM\Column(type="datetime")
      */
     private $updated_at;
-
-    /**
-     * @ORM\OneToOne(targetEntity="App\Entity\Resource", mappedBy="trick", cascade={"persist", "remove"})
-     */
-    private $resource;
-
+    
     /**
      * @ORM\ManyToOne(targetEntity="App\Entity\User", inversedBy="tricks")
      */
@@ -63,6 +60,11 @@ class Trick
      * @ORM\Column(type="string", length=255)
      */
     private $slug;
+
+    /**
+     * @ORM\Column(type="string", length=255, nullable=true)
+     */
+    private $resource;
 
     public function __construct()
     {
@@ -119,24 +121,6 @@ class Trick
     public function setUpdatedAt(\DateTimeInterface $updated_at): self
     {
         $this->updated_at = $updated_at;
-
-        return $this;
-    }
-
-    public function getResource(): ?Resource
-    {
-        return $this->resource;
-    }
-
-    public function setResource(?Resource $resource): self
-    {
-        $this->resource = $resource;
-
-        // set (or unset) the owning side of the relation if necessary
-        $newTrick = $resource === null ? null : $this;
-        if ($newTrick !== $resource->getTrick()) {
-            $resource->setTrick($newTrick);
-        }
 
         return $this;
     }
@@ -206,6 +190,26 @@ class Trick
         $this->slug = $slug;
 
         return $this;
+    }
+
+    public function getResource(): ?string
+    {
+        return $this->resource;
+    }
+
+    public function setResource(?string $resource): self
+    {
+        $this->resource = $resource;
+
+        return $this;
+    }
+    
+    /**
+     * @param mixed $id
+     */
+    public function setId($id): void
+    {
+        $this->id = $id;
     }
     
 }

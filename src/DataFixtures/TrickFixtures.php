@@ -25,6 +25,7 @@ class TrickFixtures extends Fixture implements /*DependentFixtureInterface,*/ Or
             $trick->setUpdatedAt($faker->dateTime);
             $trick->setUser($this->getReference(UserFixtures::USER));
             $trick->setCategory($this->getReference(CategoryFixtures::CATEGORY));
+            $trick->setSlug($faker->slug);
             $manager->persist($trick);
     
             $this->setReference(self::TRICK, $trick);

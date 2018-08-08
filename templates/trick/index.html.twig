@@ -8,7 +8,7 @@
     {% for trick in tricks %}
         <div class="item">
             <div>
-                <strong>{{ trick.name }}</strong>
+                <a href="{{ path('show_trick',{'slug':trick.slug}) }}"><strong>{{ trick.name }}</strong></a>
             </div>
             <div>
                 <p>{{ trick.description }}</p>

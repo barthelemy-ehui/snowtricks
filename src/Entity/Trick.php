@@ -21,12 +21,13 @@ class Trick
 
     /**
      * @ORM\Column(type="string", length=255)
-     * @Assert\NotBlank()
+     * @Assert\NotBlank(message="Champs vide")
      */
     private $name;
 
     /**
      * @ORM\Column(type="text", nullable=true)
+     * @Assert\NotBlank(message="Champs vide")
      */
     private $description;
 
@@ -48,6 +49,7 @@ class Trick
     /**
      * @ORM\ManyToOne(targetEntity="App\Entity\Category", inversedBy="tricks")
      * @ORM\JoinColumn(nullable=false)
+     * @Assert\NotBlank(message="Pas de sélection")
      */
     private $category;
 
@@ -57,7 +59,8 @@ class Trick
     private $comments;
 
     /**
-     * @ORM\Column(type="string", length=255)
+     * @ORM\Column(type="string", length=255, unique=true)
+     * @Assert\NotBlank(message="Pas de sélection")
      */
     private $slug;
 

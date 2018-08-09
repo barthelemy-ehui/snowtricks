@@ -3,5 +3,7 @@
 {% block title %} Editer figure {% endblock %}
 
 {% block body %}
-    {{ include('trick/_form.html.twig') }}
+    {{ form_start(form, {action:'/trick/edit/'~trick.slug,'attr': {'novalidate': 'novalidate'}}) }}
+        {{ include('trick/_form.html.twig') }}
+    {{ form_end(form) }}
 {% endblock %}

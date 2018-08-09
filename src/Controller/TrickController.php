@@ -6,13 +6,14 @@ use App\Entity\Comment;
 use App\Entity\Trick;
 use App\Form\CommentType;
 use App\Form\TrickType;
+use App\Repository\CommentRepository;
 use App\Repository\TrickRepository;
 use App\Repository\UserRepository;
+use App\Service\FileUploader;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
-use Symfony\Component\Validator\Validator\ValidatorInterface;
 
 class TrickController extends Controller
 {
@@ -25,17 +26,29 @@ class TrickController extends Controller
      * @var UserRepository
      */
     private $userRepository;
-    /**
-     * @var ValidatorInterface
-     */
-    private $validator;
     
-    public function __construct(TrickRepository $trickRepository, UserRepository $userRepository, ValidatorInterface $validator)
+    /**
+     * @var CommentRepository
+     */
+    private $commentRepository;
+    /**
+     * @var FileUploader
+     */
+    private $fileUploader;
+    
+    public function __construct(
+        TrickRepository $trickRepository,
+        UserRepository $userRepository,
+        CommentRepository $commentRepository,
+        FileUploader $fileUploader
+    )
+    
     {
     
         $this->trickRepository = $trickRepository;
         $this->userRepository = $userRepository;
-        $this->validator = $validator;
+        $this->commentRepository = $commentRepository;
+        $this->fileUploader = $fileUploader;
     }
     
     /**
@@ -51,7 +64,7 @@ class TrickController extends Controller
     /**
      * @Route("/trick/show/{slug}", name="show_trick")
      */
-    public function show($slug) {
+    public function show(Request $request, $slug) {
         
         $trick = $this->trickRepository->findOneBy([
             'slug'=>$slug
@@ -59,8 +72,26 @@ class TrickController extends Controller
         
         $comment = new Comment();
         $comment->setTrick($trick);
-        
         $form = $this->createForm(CommentType::class, $comment);
+    
+        $form->handleRequest($request);
+        
+        if($form->isSubmitted() && $form->isValid()){
+            
+            // todo à remplacer par $request->getUser()
+            $comment->setUser($this->userRepository->findOneBy(['id'=>21]));
+            $comment->setCreatedAt(new \DateTime());
+            $this->commentRepository->save($comment);
+            
+            unset($comment);
+            unset($form);
+            $comment = new Comment();
+            $comment->setTrick($trick);
+            $form = $this->createForm(CommentType::class, $comment);
+            
+        }
+        
+        
         
         return $this->render('trick/show.html.twig', [
             'trick' => $trick,
@@ -69,25 +100,57 @@ class TrickController extends Controller
     }
     
     /**
-     * @return \Symfony\Component\HttpFoundation\Response
-     * @Route("/trick/add", name="trick_add")
+     * @Route("/trick/new", name="trick_new")
      */
-    public function add(){
+    public function new(Request $request) {
         
-        $trickForm = $this->createForm(TrickType::class);
+        $trick = new Trick();
+        $trick->setCreatedAt(new \DateTime());
+       
+        $formOrRedirect = $this->AddOrEdit($trick, $request);
+        
+        if(isset($formOrRedirect['redirect'])) {
+            return $this->redirectToRoute('show_trick', [
+               'slug' => $trick->getSlug()
+            ]);
+        }
+        
+        $form = $formOrRedirect['form'];
+        
         return $this->render('trick/add.html.twig',[
-            'form' => $trickForm->createView()
+            'form' => $form->createView()
         ]);
     }
     
     
     /**
-     * @Route("/trick/save", name="trick_save")
+     * @Route("/trick/edit/{slug}", name="trick_edit")
      */
-    public function save(Request $request) {
+    public function edit($slug, Request $request) {
         
-        $trick = new Trick();
-        $trick->setCreatedAt(new \DateTime());
+        $trick = $this->trickRepository->findOneBy(['slug' => $slug]);
+    
+        $formOrRedirect = $this->AddOrEdit($trick, $request);
+        if(isset($formOrRedirect['redirect'])){
+            return $this->redirectToRoute('show_trick', [
+                'slug' => $trick->getSlug()
+            ]);
+        }
+    
+        $form = $formOrRedirect['form'];
+        $this->redirectToRoute('show_trick', [
+            'slug' => $trick->getSlug()
+        ]);
+        
+        return $this->render('trick/edit.html.twig', [
+           'form' => $form->createView(),
+           'trick' => $trick
+        ]);
+    }
+    
+    
+    private function AddOrEdit(Trick $trick, Request $request) {
+    
         $trick->setUpdatedAt(new \DateTime());
         
         //todo à remplacer avec $request->getUser();
@@ -96,50 +159,19 @@ class TrickController extends Controller
         $form = $this->createForm(TrickType::class, $trick);
         $form->handleRequest($request);
     
-        // todo: gestion des retours d'erreurs
-        $errors = $this->validator->validate($trick);
-        if( count($errors) > 0 ) {
-            return $this->redirectToRoute('trick_add');
-        }
-    
         if($form->isSubmitted() && $form->isValid()) {
-            
-            // todo à déplacer dans un service pour ensuite être utilisé dans la version modifier
             if(!empty($trick->getResource())){
                 /** @var UploadedFile $file */
                 $file = new UploadedFile($trick->getResource(),'tmp');
-                $fileName = $this->generateUniqueFileName() . '.' .$file->guessExtension();
-                $file->move(
-                  $this->getParameter('files_directory'),
-                  $fileName
+                $trick->setResource(
+                    $this->fileUploader->upload($file)
                 );
-                $trick->setResource($fileName);
             }
             
             $trick = $this->trickRepository->save($form->getData());
-            return $this->redirectToRoute('show_trick', [
-                'slug' => $trick->getSlug()
-            ]);
+            return ['redirect'=>true];
         }
         
-        return $this->redirectToRoute('trick_add');
-    }
-    
-    
-    /**
-     * @Route("/trick/edit/{slug}", name="trick_edit")
-     */
-    public function edit($slug) {
-        
-        $trick = $this->trickRepository->findOneBy(['slug' => $slug]);
-        $form = $this->createForm(TrickType::class, $trick);
-        return $this->render('trick/edit.html.twig', [
-           'form' => $form->createView()
-        ]);
-    }
-    
-    private function generateUniqueFileName()
-    {
-        return md5(uniqid('file',false));
+        return ['form' => $form];
     }
 }

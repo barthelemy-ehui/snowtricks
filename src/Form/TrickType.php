@@ -5,7 +5,6 @@ namespace App\Form;
 use App\Entity\Category;
 use App\Entity\Trick;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
-use Symfony\Bundle\FrameworkBundle\Routing\Router;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\CallbackTransformer;
@@ -17,26 +16,19 @@ use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\OptionsResolver\OptionsResolver;
-use Symfony\Component\Routing\RouterInterface;
 
 class TrickType extends AbstractType
 {
-    /**
-     * @var Router
-     */
-    private $router;
+    protected $container;
     
     public function __construct(ContainerInterface $container)
     {
         $this->container = $container;
     }
     
-    public function buildForm(FormBuilderInterface $builder, array $options)
+    public function buildForm(FormBuilderInterface $builder, array $options):void
     {
         $builder
-            ->setAction(
-                $this->container->get('router')->generate('trick_save')
-            )
             ->add('id', HiddenType::class)
             ->add('name', TextType::class, [
                 'label' => 'Titre'
@@ -52,7 +44,7 @@ class TrickType extends AbstractType
             ])
             ->add('category', EntityType::class, [
                 'class' => Category::class,
-                'choice_label' => function($category) {
+                'choice_label' => function(Category $category) {
                     return $category->getName();
                 }
             ])
@@ -61,7 +53,7 @@ class TrickType extends AbstractType
             ]);
         
         $builder->get('resource')->addModelTransformer(new CallbackTransformer(function($resource) {
-            if(!is_null($resource)) {
+            if($resource !== null) {
             return new UploadedFile(
                 $this->container->getParameter('files_directory') .'/'.  $resource,
                 'tmp');
@@ -73,7 +65,7 @@ class TrickType extends AbstractType
         
     }
 
-    public function configureOptions(OptionsResolver $resolver)
+    public function configureOptions(OptionsResolver $resolver):void
     {
         $resolver->setDefaults([
             'data_class' => Trick::class,

@@ -46,6 +46,22 @@
         </div>
         <br/>
         {% endfor %}
-        {{ include('trick/_form.html.twig') }}
+
+        <div>
+        {{ form_start(form, {'action': '/trick/show/' ~ trick.slug, 'attr': {'novalidate': 'novalidate'} }) }}
+            <div>
+                {{ form_label(form.content) }}
+                {{ form_widget(form.content) }}
+                {{ form_errors(form.content) }}
+                {{ form_widget(form.trick) }}
+            </div>
+            <div>
+                {{ form_widget(form.save) }}
+            </div>
+            <div>
+                {{ form_widget(form.save) }}
+            </div>
+        {{ form_end(form) }}
+        </div>
     </div>
 {% endblock %}

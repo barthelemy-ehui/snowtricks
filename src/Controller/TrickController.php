@@ -154,7 +154,7 @@ class TrickController extends Controller
         $trick->setUpdatedAt(new \DateTime());
         
         //todo à remplacer avec $request->getUser();
-        $trick->setUser($this->userRepository->findOneBy(['id'=>21]));
+        $trick->setUser($this->userRepository->findOneBy(['id'=>1]));
         
         $form = $this->createForm(TrickType::class, $trick);
         $form->handleRequest($request);

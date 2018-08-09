@@ -10,7 +10,10 @@ use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 
 /**
  * @ORM\Entity(repositoryClass="App\Repository\TrickRepository")
- * @UniqueEntity("slug")
+ * @UniqueEntity(
+ *     fields={"slug"},
+ *     message="Ce slug est déjà utilisé"
+ * )
  */
 class Trick
 {

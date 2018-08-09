@@ -3,5 +3,7 @@
 {% block title %} Ajouter figure {% endblock %}
 
 {% block body %}
-    {{ include('trick/_form.html.twig') }}
+    {{ form_start(form, {'attr': {'novalidate': 'novalidate'}}) }}
+        {{ include('trick/_form.html.twig') }}
+    {{ form_end(form) }}
 {% endblock %}

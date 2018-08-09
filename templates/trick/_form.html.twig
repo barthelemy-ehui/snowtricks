@@ -1,3 +1,34 @@
-{{ form_start(form, {'attr': {'novalidate': 'novalidate'}}) }}
-        {{ form_widget(form) }}
-{{ form_end(form) }}
+{{ form_widget(form.id) }}
+<div>
+    {{ form_label(form.name) }}
+    {{ form_widget(form.name) }}
+    {{ form_errors(form.name) }}
+</div>
+
+<div>
+    {{ form_label(form.description) }}
+    {{ form_widget(form.description) }}
+    {{ form_errors(form.description) }}
+</div>
+
+<div>
+    {{ form_label(form.slug) }}
+    {{ form_widget(form.slug) }}
+    {{ form_errors(form.slug) }}
+</div>
+
+<div>
+    {{ form_label(form.resource) }}
+    {{ form_widget(form.resource) }}
+    {{ form_errors(form.resource) }}
+</div>
+
+<div>
+    {{ form_label(form.category) }}
+    {{ form_widget(form.category) }}
+    {{ form_errors(form.category) }}
+</div>
+
+<div>
+    {{ form_widget(form.save) }}
+</div>

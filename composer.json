@@ -30,7 +30,7 @@
         "symfony/debug-pack": "*",
         "symfony/dotenv": "^4.1",
         "symfony/maker-bundle": "^1.0",
-        "symfony/profiler-pack": "*",
+        "symfony/profiler-pack": "^1.0",
         "symfony/test-pack": "^1.0",
         "symfony/web-server-bundle": "^4.1"
     },

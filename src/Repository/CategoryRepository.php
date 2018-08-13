@@ -18,6 +18,26 @@ class CategoryRepository extends ServiceEntityRepository
     {
         parent::__construct($registry, Category::class);
     }
+    
+    public function save($data){
+        $em = $this->getEntityManager();
+        if(is_null($data->getId())){
+            $em->persist($data);
+        } else {
+            $em->merge($data);
+        }
+        
+        $em->flush();
+        
+        return $data;
+        
+    }
+    
+    public function delete(int $id){
+        $em = $this->_em;
+        $category = $em->getRepository(Category::class)->findOneBy(['id'=>$id]);
+        $em->remove($category);
+    }
 
 //    /**
 //     * @return Category[] Returns an array of Category objects

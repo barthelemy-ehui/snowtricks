@@ -79,7 +79,7 @@ class TrickController extends Controller
         if($form->isSubmitted() && $form->isValid()){
             
             // todo à remplacer par $request->getUser()
-            $comment->setUser($this->userRepository->findOneBy(['id'=>21]));
+            $comment->setUser($this->userRepository->findOneBy(['id'=>1]));
             $comment->setCreatedAt(new \DateTime());
             $this->commentRepository->save($comment);
             

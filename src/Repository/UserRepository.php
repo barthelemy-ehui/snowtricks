@@ -18,6 +18,16 @@ class UserRepository extends ServiceEntityRepository
     {
         parent::__construct($registry, User::class);
     }
+    
+    public function save(User $user){
+        $em = $this->getEntityManager();
+        if($user->getId() === null ) {
+            $em->persist($user);
+        } else {
+            $em->merge($user);
+        }
+        $em->flush();
+    }
 
 //    /**
 //     * @return User[] Returns an array of User objects

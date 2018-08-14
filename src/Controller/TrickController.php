@@ -67,7 +67,7 @@ class TrickController extends Controller
     public function show(Request $request, $slug) {
         
         $trick = $this->trickRepository->findOneBy([
-            'slug'=>$slug
+            'slug' => $slug
         ]);
         
         $comment = new Comment();
@@ -82,9 +82,9 @@ class TrickController extends Controller
             $comment->setUser($this->userRepository->findOneBy(['id'=>21]));
             $comment->setCreatedAt(new \DateTime());
             $this->commentRepository->save($comment);
-            
             unset($comment);
             unset($form);
+            
             $comment = new Comment();
             $comment->setTrick($trick);
             $form = $this->createForm(CommentType::class, $comment);

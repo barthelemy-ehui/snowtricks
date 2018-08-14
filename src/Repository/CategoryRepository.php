@@ -37,6 +37,7 @@ class CategoryRepository extends ServiceEntityRepository
         $em = $this->_em;
         $category = $em->getRepository(Category::class)->findOneBy(['id'=>$id]);
         $em->remove($category);
+        $em->flush();
     }
 
 //    /**

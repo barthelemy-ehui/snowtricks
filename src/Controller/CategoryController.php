@@ -32,64 +32,78 @@ class CategoryController extends Controller
     }
     
     /**
-     * @Route("/category/new/{slug}", name="category_new")
+     * @Route("/category/new/{slug}", name="category_new", defaults={"slug"=""})
      */
     public function new($slug, Request $request)
     {
-        $category = new Category();
-        $category->setCreatedAt(new \DateTime());
-        $category->setUpdatedAt(new \DateTime());
-        $formOrRedirect = $this->AddOrEdit($category, $request);
-        if(isset($formOrRedirect['redirect']))
-        {
-            return $this->redirectToRoute('show_trick',[
-                'slug' => $slug
+            $category = new Category();
+            $category->setCreatedAt(new \DateTime());
+            $category->setUpdatedAt(new \DateTime());
+            $formOrRedirect = $this->AddOrEdit($category, $request);
+
+            if(isset($formOrRedirect['redirect']))
+            {
+                if(!empty($slug)){
+                    return $this->redirectToRoute('trick_edit',[
+                        'slug' => $slug
+                    ]);
+                } else {
+                    return $this->redirectToRoute('trick_new');
+                }
+            }
+            
+            
+            return $this->render('category/add.html.twig', [
+                'form' => $formOrRedirect['form']->createView()
             ]);
-        }
-        return $this->render('category/add.html.twig', [
-            'form' => $formOrRedirect['form']
-        ]);
     }
     
     /**
-     * @Route("/category/edit/{slug}", name="category_edit")
+     * @Route("/category/edit/{id}/{slug}", name="category_edit", defaults={"slug"=""})
      */
-    public function edit($slug, Request $request)
+    public function edit($id,$slug, Request $request)
     {
-        $category = new Category();
+        $category = $this->categoryRepository->findOneBy(['id' => $id]);
         $category->setUpdatedAt(new \DateTime());
         $category->setUser($this->userRepository->findOneBy(['id'=>1]));
         $formOrRedirect = $this->AddOrEdit($category, $request);
         if(isset($formOrRedirect['redirect']))
-        {
-            return $this->redirectToRoute('show_trick',[
-                'slug' => $slug
-            ]);
-        }
-
-        $form = $formOrRedirect['form'];
+            if(isset($formOrRedirect['redirect']))
+            {
+                if(!empty($slug)){
+                    return $this->redirectToRoute('trick_edit',[
+                        'slug' => $slug
+                    ]);
+                } else {
+                    return $this->redirectToRoute('trick_new');
+                }
+            }
+    
+    
         return $this->render('category/edit.html.twig', [
-           'form' => $form
+           'form' => $formOrRedirect['form']->createView()
         ]);
     }
     
+    /**
+     * @Route("/category/delete/{id}/{slug}", name="category_delete", defaults={"slug"=""})
+     */
+    public function delete($id, $slug)
+    {
+        $this->categoryRepository->delete($id);
+        if(!empty($slug)){
+            return $this->redirectToRoute('trick_edit',['slug' => $slug]);
+        }
+        return $this->redirectToRoute('trick_new');
+    }
+    
     private function AddOrEdit(Category $category, Request $request) {
-        
         $form = $this->createForm(CategoryType::class, $category);
+        $form->handleRequest($request);
         if($form->isSubmitted() && $form->isValid()) {
             $this->categoryRepository->save($category);
             return ['redirect' => true];
         }
         return ['form' => $form];
     }
-    
-    /**
-     * @Route("/category/delete/{slug}/{id}", name="category_delete")
-     */
-    public function delete($id, $slug)
-    {
-        $this->categoryRepository->delete($id);
-        return $this->redirectToRoute('show_trick',['slug' => $slug]);
-    }
-    
 }

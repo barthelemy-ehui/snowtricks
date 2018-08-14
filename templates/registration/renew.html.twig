@@ -1,0 +1,18 @@
+{% extends 'base.html.twig' %}
+{% block title %}Enregistrer{% endblock %}
+{% block body %}
+    {{ form_start(form, {'attr': {'novalidate': 'novalidate'}}) }}
+
+    <div>
+        <p>Renouveller votre compte</p>
+    </div>
+    <div>
+        {{ form_label(form.email) }}
+        {{ form_widget(form.email) }}
+        {{ form_errors(form.email) }}
+    </div>
+    <div>
+        {{ form_widget(form.save) }}
+    </div>
+    {{ form_end(form) }}
+{% endblock %}

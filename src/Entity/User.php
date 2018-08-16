@@ -94,6 +94,11 @@ class User implements UserInterface, \Serializable
      */
     private $roles;
     
+    /**
+     * @ORM\Column(type="boolean")
+     */
+    private $active;
+    
     public function __construct()
     {
         $this->comments = new ArrayCollection();
@@ -379,5 +384,37 @@ class User implements UserInterface, \Serializable
     public function getPlainPassword()
     {
         return $this->plainPassword;
+    }
+    
+    /**
+     * @param mixed $plainPassword
+     */
+    public function setPlainPassword($plainPassword): void
+    {
+        $this->plainPassword = $plainPassword;
+    }
+    
+    /**
+     * @return mixed
+     */
+    public function getActive()
+    {
+        return $this->active;
+    }
+    
+    /**
+     * @param mixed $active
+     */
+    public function setActive($active): void
+    {
+        $this->active = $active;
+    }
+    
+    /**
+     * @param mixed $roles
+     */
+    public function setRoles($roles): void
+    {
+        $this->roles = $roles;
     }
 }

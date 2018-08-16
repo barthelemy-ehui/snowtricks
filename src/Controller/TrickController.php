@@ -1,5 +1,4 @@
 <?php
-
 namespace App\Controller;
 
 use App\Entity\Comment;
@@ -71,7 +70,6 @@ class TrickController extends Controller
         
         if($form->isSubmitted() && $form->isValid()){
             
-            // todo à remplacer par $request->getUser()
             $comment->setUser($this->getUser());
             $comment->setCreatedAt(new \DateTime());
             $this->commentRepository->save($comment);

@@ -9,9 +9,11 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
-use Symfony\Component\Security\Core\Encoder\UserPasswordEncoder;
+//use Symfony\Component\Security\Core\Encoder\UserPasswordEncoder;
+use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
+//Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface
 
-class RegistrationController extends AbstractController/*Controller*/
+class RegistrationController extends AbstractController
 {
     /**
      * @var UserRepository
@@ -27,9 +29,8 @@ class RegistrationController extends AbstractController/*Controller*/
     /**
      * @Route("/register", name="user_registration")
      */
-    public function register(Request $request, UserPasswordEncoder $passwordEncoder)
+    public function register(Request $request, UserPasswordEncoderInterface $passwordEncoder)
     {
-        // 1) build the form
         $user = new User();
         $form = $this->createForm(UserType::class, $user);
         
@@ -37,12 +38,15 @@ class RegistrationController extends AbstractController/*Controller*/
         if($form->isSubmitted() && $form->isValid()) {
             $password = $passwordEncoder->encodePassword($user, $user->getPlainPassword());
             $user->setPassword($password);
-            
+            $user->setCreatedAt(new \DateTime());
+            $user->setUpdatedAt(new \DateTime());
+            $user->setToken(md5(uniqid('token', true)));
+            $user->setActive(false);
             $this->userRepository->save($user);
             
-            // todo: Envoyer un token à l'utilisateur pour confirmer l'inscription
+            // todo: Envoyer un e-email avec le token à valider
             
-            return $this->redirectToRoute('/trick');
+            return $this->redirectToRoute('trick');
         }
         
         return $this->render('registration/register.html.twig', [
@@ -51,35 +55,23 @@ class RegistrationController extends AbstractController/*Controller*/
     }
     
     /**
-     * @Route("/connexion", name="user_connexion")
+     * @Route("/renew/{token}", name="renew_password")
      */
-    public function connexion(Request $request)
-    {
-        $user = new User();
-        
-        $form = $this->createForm(UserType::class, $user);
-        if($form->isSubmitted() && $form->isValid()){
-            //todo: verifier l'utilisateur depuis la base puis le faire connecter
-        }
-        
-        return $this->render('registration/connexion.html.twig', [
-            'form' => null
-        ]);
-    }
-    
-    /**
-     * @Route("/renew", name="renew_password")
-     */
-    public function passwordRenew(){
+    public function passwordRenew($token){
         // todo: renew password
         $user = new User();
         
         $form = $this->createForm(UserType::class, $user);
         if($form->isSubmitted() && $form->isValid()){
-            //todo implemente le test
+            // todo Implementer le test
+            // todo Envoyer un token
         }
         
-        return $this->redirectToRoute('registration/renew.html.twig',[
+        // Vérifier le token dans la base puis montrer la page de renouvellement de mot de passe
+        
+        // Sinon afficher qu'il est impossible de renouveller
+        
+        return $this->render('registration/renew.html.twig',[
            '$form' => $form->createView()
         ]);
     }

@@ -2,6 +2,14 @@
     <div>{{ error.messageKey|trans(error.messageData, 'security') }}</div>
 {% endif %}
 
+{% for label, messages in app.flashes(['success','failed']) %}
+    {% for message in messages %}
+        <div>
+            <strong>{{ message }}</strong>
+        </div>
+    {% endfor %}
+{% endfor %}
+
 <form action="{{ path('login') }}" method="post">
     <label for="username">Pseudo:</label>
     <input type="text" id="username" name="_username" value="{{ last_username }}" />
@@ -17,3 +25,7 @@
 
     <button type="submit">login</button>
 </form>
+
+<div>
+    <a href="{{ path('renew_password') }}">Mot de passe oublié?</a>
+</div>

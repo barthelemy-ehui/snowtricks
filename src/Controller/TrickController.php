@@ -7,7 +7,9 @@ use App\Form\CommentType;
 use App\Form\TrickType;
 use App\Repository\CommentRepository;
 use App\Repository\TrickRepository;
+use App\Repository\UserRepository;
 use App\Service\FileUploader;
+use App\Service\SendToken;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\HttpFoundation\Request;
@@ -29,11 +31,21 @@ class TrickController extends Controller
      * @var FileUploader
      */
     private $fileUploader;
+    /**
+     * @var SendToken
+     */
+    private $sendToken;
+    /**
+     * @var UserRepository
+     */
+    private $userRepository;
     
     public function __construct(
         TrickRepository $trickRepository,
         CommentRepository $commentRepository,
-        FileUploader $fileUploader
+        FileUploader $fileUploader,
+        SendToken $sendToken,
+        UserRepository $userRepository
     )
     
     {
@@ -41,6 +53,8 @@ class TrickController extends Controller
         $this->trickRepository = $trickRepository;
         $this->commentRepository = $commentRepository;
         $this->fileUploader = $fileUploader;
+        $this->sendToken = $sendToken;
+        $this->userRepository = $userRepository;
     }
     
     /**

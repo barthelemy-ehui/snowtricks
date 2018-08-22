@@ -95,9 +95,9 @@ class User implements UserInterface, \Serializable
     private $roles;
     
     /**
-     * @ORM\Column(type="boolean")
+     * @ORM\Column(name="is_active", type="boolean")
      */
-    private $active;
+    private $isActive;
     
     public function __construct()
     {
@@ -395,26 +395,26 @@ class User implements UserInterface, \Serializable
     }
     
     /**
-     * @return mixed
-     */
-    public function getActive()
-    {
-        return $this->active;
-    }
-    
-    /**
-     * @param mixed $active
-     */
-    public function setActive($active): void
-    {
-        $this->active = $active;
-    }
-    
-    /**
      * @param mixed $roles
      */
     public function setRoles($roles): void
     {
         $this->roles = $roles;
+    }
+    
+    /**
+     * @return mixed
+     */
+    public function getisActive()
+    {
+        return $this->isActive;
+    }
+    
+    /**
+     * @param mixed $isActive
+     */
+    public function setIsActive($isActive): void
+    {
+        $this->isActive = $isActive;
     }
 }

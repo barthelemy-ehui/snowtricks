@@ -1,10 +1,17 @@
 {% extends 'base.html.twig' %}
 {% block title %}Enregistrer{% endblock %}
 {% block body %}
-    {{ form_start(form, {'attr': {'novalidate': 'novalidate'}}) }}
+    {% for label, messages in app.flashes(['success','failed']) %}
+        {% for message in messages %}
+            <div>
+                <strong>{{ message }}</strong>
+            </div>
+        {% endfor %}
+    {% endfor %}
 
+    {{ form_start(form, {'attr': {'novalidate': 'novalidate'}}) }}
     <div>
-        <p>Renouveller votre compte</p>
+        <p>Demande de nouveau mot de passe</p>
     </div>
     <div>
         {{ form_label(form.email) }}

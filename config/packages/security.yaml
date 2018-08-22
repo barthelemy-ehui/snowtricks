@@ -28,7 +28,7 @@ security:
             form_login:
                 login_path: login
                 check_path: login
-
+            user_checker: App\Security\UserChecker
             # activate different ways to authenticate
 
             # http_basic: true

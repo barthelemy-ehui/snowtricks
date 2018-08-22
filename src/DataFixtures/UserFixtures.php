@@ -23,9 +23,9 @@ class UserFixtures extends Fixture implements OrderedFixtureInterface
            $user->setEmail($faker->email);
            $user->setPassword(password_hash($faker->password, PASSWORD_BCRYPT));
            $user->setToken(md5(uniqid('token', false)));
-           $user->setActive(true);
            $user->setCreatedAt($faker->dateTime);
            $user->setUpdatedAt($faker->dateTime);
+           $user->setIsActive(false);
            $manager->persist($user);
            $this->setReference(self::USER, $user);
         }

@@ -58,7 +58,7 @@ class TrickController extends Controller
     }
     
     /**
-     * @Route("/trick", name="trick")
+     * @Route("/", name="trick")
      */
     public function index()
     {

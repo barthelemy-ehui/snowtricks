@@ -21,8 +21,6 @@ use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 use Symfony\Component\Validator\Constraints\Email;
 use Symfony\Component\Validator\Constraints\NotBlank;
 
-//Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface
-
 class RegistrationController extends AbstractController
 {
     /**
@@ -134,6 +132,7 @@ class RegistrationController extends AbstractController
                     SendToken::RENEW_MESSAGE
                 );
                 $this->addFlash('success','Le lien pour renouveller votre mot de passe est envoyé avec success par email.');
+                return $this->redirectToRoute('trick');
             }else {
                 $this->addFlash('failed','Adresse e-mail inexistant');
             }

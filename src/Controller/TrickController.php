@@ -96,8 +96,6 @@ class TrickController extends Controller
             
         }
         
-        
-        
         return $this->render('trick/show.html.twig', [
             'trick' => $trick,
             'form' => $form->createView()

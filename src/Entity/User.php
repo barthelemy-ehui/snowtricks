@@ -342,7 +342,7 @@ class User implements UserInterface, \Serializable
      */
     public function eraseCredentials()
     {
-        // TODO: Implement eraseCredentials() method.
+        $this->plainPassword = null;
     }
     
     /**
@@ -416,5 +416,13 @@ class User implements UserInterface, \Serializable
     public function setIsActive($isActive): void
     {
         $this->isActive = $isActive;
+    }
+    
+    /**
+     * @param mixed $id
+     */
+    public function setId($id): void
+    {
+        $this->id = $id;
     }
 }

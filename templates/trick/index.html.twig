@@ -3,6 +3,14 @@
 {% block title %}Ensemble des figures{% endblock %}
 
 {% block body %}
+    {% for label, messages in app.flashes(['success','failed']) %}
+        {% for message in messages %}
+            <div>
+                <strong>{{ message }}</strong>
+            </div>
+        {% endfor %}
+    {% endfor %}
+
 <!-- La liste des tricks à afficher-->
     <div class="container">
     {% for trick in tricks %}

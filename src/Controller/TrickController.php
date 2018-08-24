@@ -1,5 +1,4 @@
 <?php
-
 namespace App\Controller;
 
 use App\Entity\Comment;
@@ -10,6 +9,7 @@ use App\Repository\CommentRepository;
 use App\Repository\TrickRepository;
 use App\Repository\UserRepository;
 use App\Service\FileUploader;
+use App\Service\SendToken;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\HttpFoundation\Request;
@@ -22,10 +22,6 @@ class TrickController extends Controller
      * @var TrickRepository
      */
     private $trickRepository;
-    /**
-     * @var UserRepository
-     */
-    private $userRepository;
     
     /**
      * @var CommentRepository
@@ -35,24 +31,34 @@ class TrickController extends Controller
      * @var FileUploader
      */
     private $fileUploader;
+    /**
+     * @var SendToken
+     */
+    private $sendToken;
+    /**
+     * @var UserRepository
+     */
+    private $userRepository;
     
     public function __construct(
         TrickRepository $trickRepository,
-        UserRepository $userRepository,
         CommentRepository $commentRepository,
-        FileUploader $fileUploader
+        FileUploader $fileUploader,
+        SendToken $sendToken,
+        UserRepository $userRepository
     )
     
     {
     
         $this->trickRepository = $trickRepository;
-        $this->userRepository = $userRepository;
         $this->commentRepository = $commentRepository;
         $this->fileUploader = $fileUploader;
+        $this->sendToken = $sendToken;
+        $this->userRepository = $userRepository;
     }
     
     /**
-     * @Route("/trick", name="trick")
+     * @Route("/", name="trick")
      */
     public function index()
     {
@@ -78,8 +84,7 @@ class TrickController extends Controller
         
         if($form->isSubmitted() && $form->isValid()){
             
-            // todo à remplacer par $request->getUser()
-            $comment->setUser($this->userRepository->findOneBy(['id'=>21]));
+            $comment->setUser($this->getUser());
             $comment->setCreatedAt(new \DateTime());
             $this->commentRepository->save($comment);
             unset($comment);
@@ -153,8 +158,7 @@ class TrickController extends Controller
     
         $trick->setUpdatedAt(new \DateTime());
         
-        //todo à remplacer avec $request->getUser();
-        $trick->setUser($this->userRepository->findOneBy(['id'=>1]));
+        $trick->setUser($this->getUser());
         
         $form = $this->createForm(TrickType::class, $trick);
         $form->handleRequest($request);

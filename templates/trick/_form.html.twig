@@ -29,22 +29,25 @@
     {{ form_errors(form.category) }}
 </div>
 
-<div>
-    <ul>
-        {% if trick is defined %}
-            {% set pathAdd = path('category_new', {slug:trick.slug}) %}
-            {% set pathEdit = path('category_edit', {slug:trick.slug, id:0}) %}
-            {% set pathDelete = path('category_delete', {slug:trick.slug, id:0}) %}
-        {% else %}
-            {% set pathAdd = path('category_new') %}
-            {% set pathEdit = path('category_edit', {id:0}) %}
-            {% set pathDelete = path('category_delete', {id:0}) %}
-        {% endif %}
-        <li><a href="{{ pathAdd }}">Ajouter</a></li>
-        <li><a id="categoryEdit" href="{{ pathEdit }}">Modifier</a></li>
-        <li><a id="categoryDelete" href="{{ pathDelete }}">Delete</a></li>
-    </ul>
-</div>
+{% if is_granted('ROLE_ADMIN') %}
+    <div>
+        <ul>
+            {% if trick is defined %}
+                {% set pathAdd = path('category_new', {slug:trick.slug}) %}
+                {% set pathEdit = path('category_edit', {slug:trick.slug, id:0}) %}
+                {% set pathDelete = path('category_delete', {slug:trick.slug, id:0}) %}
+            {% else %}
+                {% set pathAdd = path('category_new') %}
+                {% set pathEdit = path('category_edit', {id:0}) %}
+                {% set pathDelete = path('category_delete', {id:0}) %}
+            {% endif %}
+            <li><a href="{{ pathAdd }}">Ajouter</a></li>
+            <li><a id="categoryEdit" href="{{ pathEdit }}">Modifier</a></li>
+            <li><a id="categoryDelete" href="{{ pathDelete }}">Delete</a></li>
+        </ul>
+    </div>
+{% endif %}
+
 <div>
     {{ form_widget(form.save) }}
 </div>

@@ -16,7 +16,6 @@ use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
-//use Symfony\Component\Security\Core\Encoder\UserPasswordEncoder;
 use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 use Symfony\Component\Validator\Constraints\Email;
 use Symfony\Component\Validator\Constraints\NotBlank;
@@ -72,7 +71,7 @@ class RegistrationController extends AbstractController
                 $urlGenerate,
                 SendToken::ACCOUNT_MESSAGE);
    
-            return new Response('Un email vous a été envoyé pour activer votre compte. Chaud devant!');
+            return new Response('Un email vous a été envoyé pour activer votre compte.');
         }
         
         return $this->render('registration/register.html.twig', [

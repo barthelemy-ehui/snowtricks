@@ -1,31 +1,31 @@
 {% extends 'base.html.twig' %}
-
 {% block title %}Ensemble des figures{% endblock %}
-
+{% block error %}{% endblock %}
 {% block body %}
-    {% for label, messages in app.flashes(['success','failed']) %}
-        {% for message in messages %}
-            <div>
-                <strong>{{ message }}</strong>
-            </div>
-        {% endfor %}
-    {% endfor %}
-
-<!-- La liste des tricks à afficher-->
     <div class="container">
-    {% for trick in tricks %}
-        <div class="item">
-            <div>
-                <a href="{{ path('show_trick',{'slug':trick.slug}) }}"><strong>{{ trick.name }}</strong></a>
-            </div>
-            <div>
-                <p>{{ trick.description }}</p>
-            </div>
-            <div>
-                <em>{{ trick.user.username }}</em> - <em>{{ trick.category.name }}</em>
-            </div>
+        <div class="row">
+            {% for trick in tricks %}
+                <div class="col tricks">
+                    <div class="card">
+                        <img src="https://via.placeholder.com/225x120"/>
+                        <ul class="list-inline">
+                            <li class="list-inline-item">
+                                <a href="{{ path('show_trick', {slug: trick.slug}) }}">{{ trick.name }}</a>
+                            </li>
+                            {% if app.user %}
+                                <li class="list-inline-item">
+                                    <a href="{{ path('trick_edit', {slug: trick.slug}) }}"><i class="fas fa-edit"></i></a>
+                                </li>
+                                <li class="list-inline-item">
+                                    <form action="{{ path('trick_delete', {slug: trick.slug }) }}">
+                                        <button type="submit" id="trick_delete"><i class="fas fa-trash-alt"></i></button>
+                                    </form>
+                                </li>
+                            {% endif %}
+                        </ul>
+                    </div>
+                </div>
+            {% endfor %}
         </div>
-        <hr/>
-    {% endfor %}
     </div>
 {% endblock %}

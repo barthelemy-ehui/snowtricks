@@ -1,31 +1,85 @@
 {{ form_widget(form.id) }}
 <div>
     {{ form_label(form.name) }}
-    {{ form_widget(form.name) }}
+    {{ form_widget(form.name, {attr: {class:'form-control'}}) }}
     {{ form_errors(form.name) }}
 </div>
 
 <div>
     {{ form_label(form.description) }}
-    {{ form_widget(form.description) }}
+    {{ form_widget(form.description, {attr: {class:'form-control'}}) }}
     {{ form_errors(form.description) }}
 </div>
 
 <div>
     {{ form_label(form.slug) }}
-    {{ form_widget(form.slug) }}
+    {{ form_widget(form.slug, {attr: {class:'form-control'}}) }}
     {{ form_errors(form.slug) }}
 </div>
 
-<div>
-    {{ form_label(form.resource) }}
-    {{ form_widget(form.resource) }}
-    {{ form_errors(form.resource) }}
+<div id="display_principal_images">
+    <div>
+        {% if trick is defined and trick.Principal and trick.Principal.type == 'img' %}
+            <img src="{{ files_directory ~ trick.Principal.name }}"  />
+        {% elseif trick is defined and trick.Principal and trick.Principal.type == 'video' %}
+            <video src="{{ files_directory ~ trick.Principal.name }}"></video>
+        {% endif %}
+    </div>
+    {% if trick is defined and trick.Principal is defined and trick.Principal.id is defined %}
+        <div>
+            <form action="{{ path('media_edit', { slug: trick.slug, id: trick.Principal.id }) }}" method="post" enctype="multipart/form-data">
+                <input type="file" name="resource" style="display:none"/>
+                <button type="button" class="edit_resource">Modifier</button>
+                <button type="submit" style="display:none;"></button>
+            </form>
+            <form action="{{ path('media_delete', { slug: trick.slug, id: trick.Principal.id }) }}" method="post">
+                <button type="submit">Supprimer</button>
+            </form>
+        </div>
+    {% endif %}
+</div>
+<br/>
+<div id="display_images">
+    <div>
+        {% if trick is defined %}
+            {% for resource in trick.resources if resource.principal != true %}
+                <div>
+                    {% if resource.type == 'img' %}
+                        <img src="{{ files_directory ~ resource.name }}" />
+                    {% else %}
+                        <video src="{{ files_directory ~ resource.name }}"></video>
+                    {% endif %}
+                </div>
+                <div>
+                    <form></form>
+                    <form action="{{ path('media_edit', { slug: trick.slug, id: resource.id}) }}" method="post" enctype="multipart/form-data">
+                        <input type="file" name="resource" style="display:none;"/>
+                        <button type="button" class="edit_resource">Modifier</button>
+                        <button type="submit" style="display:none;"></button>
+                    </form>
+                </div>
+                <div>
+                    <form action="{{ path('media_delete', { slug: trick.slug, id: resource.id}) }}" method="post">
+                        <button type="submit">Supprimer</button>
+                    </form>
+                </div>
+            {% endfor %}
+        {% endif %}
+    </div>
+</div>
+
+<div id="upload_file">
+    {{ form_label(form.resources) }}
+       <div id="trick_resources"
+            data-principal="{{ form_widget(form.resources.vars.prototype.principal)|e('html_attr') }}"
+            data-prototype="{{ form_widget(form.resources.vars.prototype, { attr: {class:'form-control'}})|e('html_attr') }}"></div>
+        <button type="button"  id="addFile"><i class="fas fa-plus-circle"></i></button>
+    {{ form_errors(form.resources) }}
 </div>
 
 <div>
     {{ form_label(form.category) }}
-    {{ form_widget(form.category) }}
+    {{ form_widget(form.category, {attr: {class:'form-control'}}) }}
     {{ form_errors(form.category) }}
 </div>
 
@@ -52,36 +106,125 @@
     {{ form_widget(form.save) }}
 </div>
 
+{% if is_granted('ROLE_ADMIN') %}
+    <script type="application/javascript">
+        var category = document.querySelector('#trick_category');
+        var updateCategory = document.querySelector('#categoryEdit');
+        var deleteCategory = document.querySelector('#categoryDelete');
+
+        var urlUpdate = updateCategory.pathname;
+        var urlDelete = deleteCategory.pathname;
+
+        updateCategoryEditId(category.value);
+        category.addEventListener('change', function (evt) {
+            updateCategoryEditId(evt.target.value);
+        });
+
+        function updateCategoryEditId(id) {
+            updateUrl(updateCategory, urlUpdate, id);
+            updateUrl(deleteCategory, urlDelete, id);
+        }
+
+        function updateUrl(element, url, id){
+            element.removeAttribute('href');
+            var urlSplitArr = url.split('/');
+            urlSplitArr.shift();
+            var urlMapArr = urlSplitArr.map(function(vUrl){
+                if(Number(vUrl) === 0 && vUrl !== "") {
+                    return id;
+                } else {
+                    return vUrl;
+                }
+            });
+            element.setAttribute('href', '/' + urlMapArr.join('/').trim());
+        }
+
+    </script>
+{% endif %}
+
+
 <script type="application/javascript">
-    var category = document.querySelector('#trick_category');
-    var updateCategory = document.querySelector('#categoryEdit');
-    var deleteCategory = document.querySelector('#categoryDelete');
 
-    var urlUpdate = updateCategory.pathname;
-    var urlDelete = deleteCategory.pathname;
 
-    updateCategoryEditId(category.value);
-    category.addEventListener('change', function (evt) {
-        updateCategoryEditId(evt.target.value);
+    var trickResources = document.querySelector('#trick_resources');
+    var inputFileContent = trickResources.dataset.prototype;
+    var addFile = document.querySelector('#addFile');
+
+    var indexName = 0;
+    addFile.addEventListener('click', function(evt) {
+        indexName++;
+
+        var inputContentRpl = inputFileContent.replace(/__name__/g, indexName);
+        var inputGroupTplt = createInputElement();
+        var inputGroupAppendTpl = createGroupAppendElement(indexName);
+
+        inputGroupTplt.appendChild(
+            createElementFromHTML(inputContentRpl)
+        );
+        inputGroupTplt.appendChild(
+            inputGroupAppendTpl
+        );
+
+       trickResources.appendChild(
+           inputGroupTplt
+       );
+
+       addEventOnRemoveFile(indexName);
     });
 
-    function updateCategoryEditId(id) {
-        updateUrl(updateCategory, urlUpdate, id);
-        updateUrl(deleteCategory, urlDelete, id);
+    var editResources = document.querySelectorAll('.edit_resource');
+    editResources.forEach(function(el){
+        el.addEventListener('click', function(evt){
+
+            var prevEl = evt.currentTarget.previousElementSibling;
+            prevEl.click();
+
+            var nextEl = evt.currentTarget.nextElementSibling;
+            prevEl.addEventListener('change', function(){
+                nextEl.click();
+            });
+
+        })
+    });
+
+    function addEventOnRemoveFile(index) {
+        var removeFile = document.querySelector('.removeFile_' + index);
+        removeFile.addEventListener('click', function(evt){
+            evt.currentTarget.closest('.input-group').remove();
+        });
     }
 
-    function updateUrl(element, url, id){
-        element.removeAttribute('href');
-        var urlSplitArr = url.split('/');
-        urlSplitArr.shift();
-        var urlMapArr = urlSplitArr.map(function(vUrl){
-            if(Number(vUrl) === 0 && vUrl !== "") {
-                return id;
-            } else {
-                return vUrl;
-            }
+    function createInputElement() {
+        return createElementFromHTML('<div class="input-group"> </div>');
+    }
+
+    function createGroupAppendElement(index) {
+
+        var trickResource = document.querySelector('#trick_resources');
+        var radioContent = trickResource.dataset.principal;
+        radioContent = radioContent.replace(/__name__/g, index);
+
+        var el = createElementFromHTML('<div class="input-group-append"> \n' +
+            '<span class="input-group-text">\n' +
+            radioContent +
+            '&nbsp;<button type="button" class="removeFile_'+ index +'"><i class="fas fa-trash-alt"></i></button>\n' +
+            '</span>\n' +
+            '</div>\n');
+
+        var btnRadio  = el.querySelector('input[type=radio]');
+        btnRadio.addEventListener('click', function(evt) {
+            var els = document.querySelectorAll('#trick_resources input[type=radio]:checked');
+            els.forEach(v => v.checked = false);
+            evt.currentTarget.checked = true;
         });
-        element.setAttribute('href', '/' + urlMapArr.join('/').trim());
+
+        return el;
+    }
+
+    function createElementFromHTML(htmlString) {
+        var div = document.createElement('div');
+        div.innerHTML = htmlString.trim();
+        return div.firstChild;
     }
 
 </script>

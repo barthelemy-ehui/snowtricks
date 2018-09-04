@@ -1,49 +1,57 @@
 {% extends 'base.html.twig' %}
 {% block title %}Profil{% endblock %}
 {% block body %}
-    <div>
-        {% for label, messages in app.flashes(['success','failed']) %}
-            {% for message in messages %}
+    <div class="container">
+        <div class="row">
+            <div class="col">
+
                 <div>
-                    <strong>{{ message }}</strong>
+                    {% for label, messages in app.flashes(['success','failed']) %}
+                        {% for message in messages %}
+                            <div>
+                                <strong>{{ message }}</strong>
+                            </div>
+                        {% endfor %}
+                    {% endfor %}
                 </div>
-            {% endfor %}
-        {% endfor %}
-    </div>
-    <div>
-    {{ form_start(form, {'attr': {'novalidate': 'novalidate'}}) }}
-        <div>
-            {{ form_widget(form.id) }}
-            {{ form_label(form.firstname) }}
-            {{ form_widget(form.firstname) }}
-            {{ form_errors(form.firstname) }}
+                <div>
+                {{ form_start(form, {'attr': {'novalidate': 'novalidate'}}) }}
+                    <div>
+                        {{ form_widget(form.id) }}
+                        {{ form_label(form.firstname) }}
+                        {{ form_widget(form.firstname) }}
+                        {{ form_errors(form.firstname) }}
+                    </div>
+                    <div>
+                        {{ form_label(form.lastname) }}
+                        {{ form_widget(form.lastname) }}
+                        {{ form_errors(form.lastname) }}
+                    </div>
+                    <div>
+                        {{ form_label(form.username) }}
+                        {{ form_widget(form.username) }}
+                        {{ form_errors(form.username) }}
+                    </div>
+                    <div>
+                        {{ form_label(form.email) }}
+                        {{ form_widget(form.email) }}
+                        {{ form_errors(form.email) }}
+                    </div>
+                    <div>
+                        {{ form_label(form.plainPassword.first) }}
+                        {{ form_widget(form.plainPassword.first, {value: app.user.password }) }}
+                        {{ form_errors(form.plainPassword.first) }}
+                        {{ form_label(form.plainPassword.second) }}
+                        {{ form_widget(form.plainPassword.second, {value: app.user.password }) }}
+                        {{ form_errors(form.plainPassword.second) }}
+                    </div>
+                    <div>
+                        {{ form_widget(form.save) }}
+                    </div>
+                    {{ form_end(form) }}
+                </div>
+
+            </div>
         </div>
-        <div>
-            {{ form_label(form.lastname) }}
-            {{ form_widget(form.lastname) }}
-            {{ form_errors(form.lastname) }}
-        </div>
-        <div>
-            {{ form_label(form.username) }}
-            {{ form_widget(form.username) }}
-            {{ form_errors(form.username) }}
-        </div>
-        <div>
-            {{ form_label(form.email) }}
-            {{ form_widget(form.email) }}
-            {{ form_errors(form.email) }}
-        </div>
-        <div>
-            {{ form_label(form.plainPassword.first) }}
-            {{ form_widget(form.plainPassword.first, {value: app.user.password }) }}
-            {{ form_errors(form.plainPassword.first) }}
-            {{ form_label(form.plainPassword.second) }}
-            {{ form_widget(form.plainPassword.second, {value: app.user.password }) }}
-            {{ form_errors(form.plainPassword.second) }}
-        </div>
-        <div>
-            {{ form_widget(form.save) }}
-        </div>
-        {{ form_end(form) }}
     </div>
 {% endblock %}

@@ -1,25 +1,25 @@
 {% extends 'base.html.twig' %}
 {% block title %}Enregistrer{% endblock %}
 {% block body %}
-    {% for label, messages in app.flashes(['success','failed']) %}
-        {% for message in messages %}
-            <div>
-                <strong>{{ message }}</strong>
-            </div>
-        {% endfor %}
-    {% endfor %}
 
-    {{ form_start(form, {'attr': {'novalidate': 'novalidate'}}) }}
-    <div>
-        <p>Demande de nouveau mot de passe</p>
+    <div class="container">
+        <div class="row">
+            <div class="col-6 mx-auto">
+                {{ form_start(form, {'attr': {'novalidate': 'novalidate'}}) }}
+                <div>
+                    <p>Demande de nouveau mot de passe</p>
+                </div>
+                <div>
+                    {{ form_label(form.email) }}
+                    {{ form_widget(form.email, {attr: {class:'form-control'}}) }}
+                    {{ form_errors(form.email) }}
+                </div>
+                <div>
+                    <br/>
+                    {{ form_widget(form.save, {attr: {class:'btn btn-primary'}}) }}
+                </div>
+                {{ form_end(form) }}
+            </div>
+        </div>
     </div>
-    <div>
-        {{ form_label(form.email) }}
-        {{ form_widget(form.email) }}
-        {{ form_errors(form.email) }}
-    </div>
-    <div>
-        {{ form_widget(form.save) }}
-    </div>
-    {{ form_end(form) }}
 {% endblock %}

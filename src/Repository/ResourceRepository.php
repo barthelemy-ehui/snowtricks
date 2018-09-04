@@ -18,6 +18,20 @@ class ResourceRepository extends ServiceEntityRepository
     {
         parent::__construct($registry, Resource::class);
     }
+    
+    public function save(Resource $resourceFound)
+    {
+        $this->_em->persist($resourceFound);
+        $this->_em->flush();
+    }
+    
+    public function delete(Resource $resource)
+    {
+        $em = $this->getEntityManager();
+        $em->remove($resource);
+        $em->flush();
+    }
+
 
 //    /**
 //     * @return Resource[] Returns an array of Resource objects

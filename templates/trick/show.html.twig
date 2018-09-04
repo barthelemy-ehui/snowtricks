@@ -1,67 +1,81 @@
 {% extends 'base.html.twig' %}
-
 {% block title %}{{ trick.name }}{% endblock %}
-
 {% block body %}
-    <div>
-        <!-- Todo: à afficher seulement si on est connecter -->
-        <a href="{{ path('trick_edit',{'slug': trick.slug}) }}">Editer</a>
-    </div>
-        <div>
-            <strong>{{ trick.name }}</strong>
-        </div>
-    {% if trick.resource %}
-        <div>
-            <!-- todo afficher selon si c'est video ou image-->
-            <img src="{{ files_directory ~ trick.resource }}" alt="">
-        </div>
-    {% endif %}
-
-    <div>
-        <p>
-            {{ trick.description }}
-        </p>
-    </div>
-    <div>
-        <em>{{ trick.user.username }}</em> | <em>{{ trick.category.name }}</em>
-    </div>
-
-    <br/>
-    <div>
-        <strong>
-            Discussions:
-        </strong>
-    </div>
-    <br/>
-    <div>
-        {% for comment in trick.comments %}
-        <div>
-            <div>
-                {{ comment.content }}
-            </div>
-            <div>
-                <strong>Auteur:</strong><em>{{ comment.user.username }}</em>
-                <strong>Date:</strong><em>{{ comment.createdat|date('d-m-Y') }}</em>
+    <div class="container" style="background: {{ trick.principal is defined?'url(' ~ files_directory ~ trick.principal.name ~ ')':'gray' }}; background-color: lightgrey; background-repeat: no-repeat; background-position: center;min-height: 340px;">
+        <div class="row">
+            <div class="col">
+                <h6 class="text-center align-middle">Trick Name</h6>
             </div>
         </div>
-        <br/>
-        {% endfor %}
+    </div>
+    <div class="container">
+        <div class="row">
+            {% for resource in trick.resources if resource.principal != true %}
+                <div class="col">
+                    <div class="card" style="width:225px; height: 120px;">
+                        <img src="{{ files_directory ~ resource.name }}" width="225" height="120" style="object-fit: contain;"/>
+                    </div>
+                </div>
+            {% endfor %}
+            {% if trick.resources|length == 0 %}
+                <div class="col">
+                    <p class="text-center">Aucune images associées à cette figure</p>
+                </div>
+            {% endif %}
+        </div>
+    </div>
+    <div class="container">
+        <div class="row">
+            <div class="col">
+                <p>
+                    {{ trick.description }}
+                </p>
+                <div class="blockquote-footer">
+                    <strong>{{ trick.user.username }}</strong> | <strong>{{ trick.category.name }}</strong>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="container">
+        <div class="row">
+            <hr/>
+            <div class="col">
+                <hr class="dropdown-divider">
+                    {{ form_start(form, {'action': '/trick/show/' ~ trick.slug, 'attr': {'novalidate': 'novalidate'} }) }}
+                        <div>
+                            {{ form_label(form.content) }}
+                            {{ form_widget(form.content,{attr: {class:'form-control'}}) }}
+                            {{ form_errors(form.content) }}
+                            {{ form_widget(form.trick) }}
+                        </div>
+                        <div>
+                            <br/>
+                            {{ form_widget(form.save, {attr: {class: 'btn btn-primary'}}) }}
+                        </div>
+                    {{ form_end(form) }}
+                <hr class="dropdown-divider">
+            </div>
+        </div>
+    </div>
+    <div class="container">
+        <div class="row">
+            {% for comment in trick.comments %}
+                <div class="col-12 comments">
+                    <div class="media">
+                        <!-- bien mettre une image par defaut -->
+                        <img class="mr-3" src="https://via.placeholder.com/64x64" alt="Generic placeholder image">
+                        <div class="media-body">
+                            <!-- <h5 class="mt-0">Media heading</h5> -->
+                            <p>{{ comment.content }}</p>
+                            <div class="blockquote-footer">
+                                <strong>Auteur:</strong><em>{{ comment.user.username }}</em>
+                                <strong>Date:</strong><em>{{ comment.createdat|date('d-m-Y') }}</em>
+                            </div>
+                        </div>
 
-        <div>
-        {{ form_start(form, {'action': '/trick/show/' ~ trick.slug, 'attr': {'novalidate': 'novalidate'} }) }}
-            <div>
-                {{ form_label(form.content) }}
-                {{ form_widget(form.content) }}
-                {{ form_errors(form.content) }}
-                {{ form_widget(form.trick) }}
-            </div>
-            <div>
-                {{ form_widget(form.save) }}
-            </div>
-            <div>
-                {{ form_widget(form.save) }}
-            </div>
-        {{ form_end(form) }}
+                    </div>
+                </div>
+            {% endfor %}
         </div>
     </div>
 {% endblock %}

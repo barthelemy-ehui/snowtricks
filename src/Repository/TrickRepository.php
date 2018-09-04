@@ -24,11 +24,11 @@ class TrickRepository extends ServiceEntityRepository
         if(is_null($data->getId())){
             $em->persist($data);
         } else {
-            if(empty($data->getResource())){
+            /*if(empty($data->getResource())){
                 $resource = $em->getRepository(Trick::class)
                     ->findOneBy(['id' => $data->getId()])->getResource();
                 $data->setResource($resource);
-            }
+            }*/
            $em->merge($data);
         }
         $em->flush();
@@ -36,6 +36,13 @@ class TrickRepository extends ServiceEntityRepository
         return $data;
     }
     
+    public function delete($trick)
+    {
+        $em = $this->getEntityManager();
+        $em->remove($trick);
+        $em->flush();
+    }
+
 //    /**
 //     * @return Trick[] Returns an array of Trick objects
 //     */

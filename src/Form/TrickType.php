@@ -3,11 +3,13 @@
 namespace App\Form;
 
 use App\Entity\Category;
+use App\Entity\Resource;
 use App\Entity\Trick;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\CallbackTransformer;
+use Symfony\Component\Form\Extension\Core\Type\CollectionType;
 use Symfony\Component\Form\Extension\Core\Type\FileType;
 use Symfony\Component\Form\Extension\Core\Type\HiddenType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
@@ -39,8 +41,14 @@ class TrickType extends AbstractType
             ->add('slug', TextType::class,[
                 'label' => 'Le slug'
             ])
-            ->add('resource', FileType::class, [
-                'label' => 'Image/Video'
+            ->add('resources', CollectionType::class, [
+                'entry_type' => ResourceType::class,
+                'prototype' => true,
+                'allow_add' => true,
+                'allow_delete' => true,
+                'by_reference' => false,
+                'required' => false,
+                'label' => 'Image/Video',
             ])
             ->add('category', EntityType::class, [
                 'class' => Category::class,
@@ -51,18 +59,6 @@ class TrickType extends AbstractType
             ->add('save',SubmitType::class, [
                 'label' => 'Envoyer'
             ]);
-        
-        $builder->get('resource')->addModelTransformer(new CallbackTransformer(function($resource) {
-            if($resource !== null) {
-            return new UploadedFile(
-                $this->container->getParameter('files_directory') .'/'.  $resource,
-                'tmp');
-            }
-            return $resource;
-        },function($resource){
-            return $resource;
-        }));
-        
     }
 
     public function configureOptions(OptionsResolver $resolver):void

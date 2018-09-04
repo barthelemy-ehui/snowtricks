@@ -1,9 +1,17 @@
 {% extends 'base.html.twig' %}
-
 {% block title %} Editer figure {% endblock %}
-
 {% block body %}
-    {{ form_start(form, {action:'/trick/edit/'~trick.slug,'attr': {'novalidate': 'novalidate'}}) }}
-        {{ include('trick/_form.html.twig') }}
-    {{ form_end(form) }}
+    <div class="container">
+        <div class="row">
+            <div class="col">
+                {{ form_start(form, {action:'/trick/edit/'~trick.slug,'attr': {'novalidate': 'novalidate'}}) }}
+                    {{ include('trick/_form.html.twig') }}
+                {{ form_end(form) }}
+                <form></form>
+                <form action="{{ path('trick_delete', {slug: trick.slug }) }}">
+                    <button type="submit" id="trick_delete">Supprimer</button>
+                </form>
+            </div>
+        </div>
+    </div>
 {% endblock %}

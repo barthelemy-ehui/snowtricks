@@ -2,10 +2,12 @@
 namespace App\Controller;
 
 use App\Entity\Comment;
+use App\Entity\Resource;
 use App\Entity\Trick;
 use App\Form\CommentType;
 use App\Form\TrickType;
 use App\Repository\CommentRepository;
+use App\Repository\ResourceRepository;
 use App\Repository\TrickRepository;
 use App\Repository\UserRepository;
 use App\Service\FileUploader;
@@ -40,12 +42,18 @@ class TrickController extends Controller
      */
     private $userRepository;
     
+    /**
+     * @var ResourceRepository
+     */
+    private $resourceRepository;
+    
     public function __construct(
         TrickRepository $trickRepository,
         CommentRepository $commentRepository,
         FileUploader $fileUploader,
         SendToken $sendToken,
-        UserRepository $userRepository
+        UserRepository $userRepository,
+        ResourceRepository $resourceRepository
     )
     
     {
@@ -55,6 +63,7 @@ class TrickController extends Controller
         $this->fileUploader = $fileUploader;
         $this->sendToken = $sendToken;
         $this->userRepository = $userRepository;
+        $this->resourceRepository = $resourceRepository;
     }
     
     /**
@@ -141,10 +150,12 @@ class TrickController extends Controller
         }
     
         $form = $formOrRedirect['form'];
-        $this->redirectToRoute('show_trick', [
-            'slug' => $trick->getSlug()
-        ]);
-        
+
+        // $this->redirectToRoute('show_trick', [
+        //    'slug' => $trick->getSlug()
+        // ]);
+        //dd($trick);
+
         return $this->render('trick/edit.html.twig', [
            'form' => $form->createView(),
            'trick' => $trick
@@ -155,25 +166,54 @@ class TrickController extends Controller
     private function AddOrEdit(Trick $trick, Request $request) {
     
         $trick->setUpdatedAt(new \DateTime());
-        
         $trick->setUser($this->getUser());
         
         $form = $this->createForm(TrickType::class, $trick);
         $form->handleRequest($request);
-    
+        
         if($form->isSubmitted() && $form->isValid()) {
-            if(!empty($trick->getResource())){
-                /** @var UploadedFile $file */
-                $file = new UploadedFile($trick->getResource(),'tmp');
-                $trick->setResource(
-                    $this->fileUploader->upload($file)
-                );
+            if(!empty($trick->getResources())) {
+                
+                /** @var Resource $resource */
+                foreach ($trick->getResources() as $resource) {
+                    $filenamePath = $resource->getName();
+                    
+                    /** @var UploadedFile $file */
+                    $file = new UploadedFile($filenamePath,'tmp');
+                    $type = $this->fileUploader->getFileType($file->guessExtension());
+                    $filename = $this->fileUploader->upload($file);
+                    $resource->setName($filename);
+                    $resource->setType($type);
+                }
+
             }
-            
             $trick = $this->trickRepository->save($form->getData());
             return ['redirect'=>true];
         }
         
         return ['form' => $form];
+    }
+    
+    /**
+     * @Route("/trick/delete/{slug}", name="trick_delete")
+     */
+    public function delete($slug){
+        
+        /** @var Trick $trick */
+        $trick = $this->trickRepository->findOneBy(['slug' => $slug]);
+        
+        /** @var Resource $resource */
+        foreach ($trick->getResources() as $resource) {
+            $this->fileUploader->deleteFile($resource->getName());
+            $this->resourceRepository->delete($resource);
+        }
+        
+        foreach($trick->getComments() as $comment) {
+            $this->commentRepository->delete($comment);
+        }
+        
+        $this->trickRepository->delete($trick);
+        
+        return $this->redirectToRoute('trick');
     }
 }

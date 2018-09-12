@@ -1,17 +1,19 @@
 {% extends 'base.html.twig' %}
 {% block title %}{{ trick.name }}{% endblock %}
 {% block body %}
-    <div class="container" style="background: {{ trick.principal is defined?'url(' ~ files_directory ~ trick.principal.name ~ ')':'gray' }}; background-color: lightgrey; background-repeat: no-repeat; background-position: center;min-height: 340px;">
+    <br/>
+    <div class="container" style="background: {{ trick.principal != null ?'url(' ~ files_directory ~ trick.principal.name ~ ')':'gray' }}; background-color: lightgrey; background-repeat: no-repeat; background-size: cover; background-position: top center;min-height: 340px;">
         <div class="row">
-            <div class="col">
-                <h6 class="text-center align-middle">Trick Name</h6>
+            <div class="col-md-auto justify-content-center">
+                <h6 class="text-center align-middle">{{ trick.name }}</h6>
             </div>
         </div>
     </div>
+    <br/>
     <div class="container">
         <div class="row">
             {% for resource in trick.resources if resource.principal != true %}
-                <div class="col">
+                <div class="col-md-auto">
                     <div class="card" style="width:225px; height: 120px;">
                         <img src="{{ files_directory ~ resource.name }}" width="225" height="120" style="object-fit: contain;"/>
                     </div>
@@ -24,6 +26,7 @@
             {% endif %}
         </div>
     </div>
+    <br/>
     <div class="container">
         <div class="row">
             <div class="col">
@@ -31,7 +34,7 @@
                     {{ trick.description }}
                 </p>
                 <div class="blockquote-footer">
-                    <strong>{{ trick.user.username }}</strong> | <strong>{{ trick.category.name }}</strong>
+                    <strong>{{ trick.user.username }}</strong> | <strong>{{ trick.category.name }}</strong> | <strong> {{ trick.createdat|date('d-m-Y') }} </strong>
                 </div>
             </div>
         </div>
@@ -78,4 +81,42 @@
             {% endfor %}
         </div>
     </div>
+
+    <script type="application/javascript">
+        var imgs = document.querySelectorAll('.col-md-auto .card img');
+
+        if(imgs.length>0){
+            var imgsNodes =  [];
+
+            imgs.forEach(function(img){
+                img.addEventListener('mouseover',function(evt){
+                    var imgPath = evt.currentTarget.src;
+                    // console.log(img);
+
+                    var divEl = document.createElement('div');
+                    divEl.style.position = 'fixed';
+                    divEl.style.top = '0px';
+                    divEl.style.left = '50%';
+
+                    var imgEl = document.createElement('img');
+                    imgEl.src = imgPath;
+                    imgEl.style.width = '500px';
+                    divEl.style.marginLeft = -(500/2)+'px';
+                    divEl.appendChild(imgEl);
+
+                    imgsNodes.push(divEl);
+
+                    document.body.appendChild(divEl);
+
+                });
+
+                img.addEventListener('mouseout',function(evt){
+                    imgsNodes.forEach(function (bigImgToRemove) {
+                        bigImgToRemove.remove();
+                    })
+                });
+            });
+
+        }
+    </script>
 {% endblock %}

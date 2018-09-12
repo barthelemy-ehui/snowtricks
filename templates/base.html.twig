@@ -2,7 +2,7 @@
 <html>
     <head>
         <meta charset="UTF-8">
-        <title>{% block title %}Welcome!{% endblock %}</title>
+        <title>{% block title %}Snowtricks{% endblock %}</title>
         <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.2.0/css/all.css" integrity="sha384-hWVjflwFxL6sNzntih27bfxkr27PmbbK/iSvJ+a4+0owXq79v+lsFkW54bOGbiDQ" crossorigin="anonymous">
         <link rel="stylesheet" href="{{ asset('build/css/app.css') }}" />
         {% block stylesheets %}{% endblock %}
@@ -29,7 +29,9 @@
     <header class="container">
         <div class="row">
                 <aside class="col-2">
-                    <img src="https://via.placeholder.com/100x50">
+                    <a href="/">
+                        <img src="/build/css/imgs/trick_logo.png" width="125px;"/>
+                    </a>
                 </aside>
                 <nav class="col-10 nav navbar-expand-sm justify-content-end">
                     <div class="nav-item"><a href="{{ path('trick') }}" class="nav-link">Tricks</a></div>

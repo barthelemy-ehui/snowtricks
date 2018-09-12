@@ -85,8 +85,9 @@ class FileUploader
     }
     
     public function deleteFile($filename) {
+        
         $path = $this->targetDirectory . '/' . $filename;
-        if(file_exists($path)){
+        if($filename !== null && file_exists($path)){
             unlink($path);
         }
     }

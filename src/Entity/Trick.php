@@ -70,7 +70,7 @@ class Trick
     private $slug;
 
     /**
-     * @ORM\OneToMany(targetEntity="App\Entity\Resource", mappedBy="trick", cascade={"persist"})
+     * @ORM\OneToMany(targetEntity="App\Entity\Resource", mappedBy="trick", cascade={"persist","merge","remove","refresh"})
      */
     private $resources;
 
@@ -251,5 +251,18 @@ class Trick
             }
         }
         return $principal;
+    }
+    
+    public function getThumbnailOrDefault() {
+        
+        if($this->resources->count() > 0) {
+            $principal = $this->getPrincipal();
+            if($principal) {
+                return $principal->getName();
+            }
+            return $this->resources->first()->getName();
+        }
+        
+        return null;
     }
 }

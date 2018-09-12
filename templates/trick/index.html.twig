@@ -2,12 +2,14 @@
 {% block title %}Ensemble des figures{% endblock %}
 {% block error %}{% endblock %}
 {% block body %}
+    <br/>
     <div class="container">
         <div class="row">
             {% for trick in tricks %}
-                <div class="col tricks">
+                <div class="col-md-auto justify-content-center tricks">
                     <div class="card">
-                        <img src="https://via.placeholder.com/225x120"/>
+                        <!-- 225px/120px-->
+                        <img src="{{ trick.getThumbnailOrDefault() ? files_directory ~ trick.getThumbnailOrDefault():'/build/css/imgs/trick_logo.png' }}" width="225px" height="120px"/>
                         <ul class="list-inline">
                             <li class="list-inline-item">
                                 <a href="{{ path('show_trick', {slug: trick.slug}) }}">{{ trick.name }}</a>
@@ -18,7 +20,7 @@
                                 </li>
                                 <li class="list-inline-item">
                                     <form action="{{ path('trick_delete', {slug: trick.slug }) }}">
-                                        <button type="submit" id="trick_delete"><i class="fas fa-trash-alt"></i></button>
+                                        <button type="submit" class="trick_delete"><i class="fas fa-trash-alt"></i></button>
                                     </form>
                                 </li>
                             {% endif %}

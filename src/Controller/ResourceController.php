@@ -62,19 +62,20 @@ class ResourceController extends Controller
      */
     public function edit(Request $request, $slug, $id)
     {
-        
-        $filenamePath = $_FILES['resource']['tmp_name'];
+        $tmp_name = implode("",array_values($_FILES['resource']['tmp_name']));
+        $filenamePath = $tmp_name;
         $file = new UploadedFile($filenamePath, 'tmp');
         $extension = $file->guessExtension();
         $filename = $this->fileUploader->upload($file);
         $filetype = $this->fileUploader->getFileType($extension);
         
         $trick = $this->trickRepository->findOneBy(['slug' => $slug]);
+
         /** @var Resource $resourceFound */
         $resourceFound = null;
-        
+
         foreach($trick->getResources() as $resource) {
-            if($resource->getId() == $id){
+            if($resource->getId() == $id) {
                 $resourceFound = $resource;
                 break;
             }

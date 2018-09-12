@@ -1,7 +1,7 @@
 <!-- Bien mettre en place la structure -->
     <div class="container" style="background: {{ trick is defined and trick.principal != null and trick.Principal.type == 'img' ?'url(' ~ files_directory ~ trick.principal.name ~ ')':'gray' }}; background-color: lightgrey; background-repeat: no-repeat; background-position: top center; background-size: cover; min-height: 340px;">
         <div class="row">
-            <div class="col">
+            <div class="col col-xl col-md col-sm">
                 {% if trick is defined %}
                     <h6 class="text-center">{{ trick.name }}</h6>
                 {% endif %}
@@ -10,15 +10,17 @@
                     <video src="{{ files_directory ~ trick.Principal.name }}"></video>
                 {% endif %}
 
-                <div class="edit_delete">
-                    {% if trick is defined and trick.Principal is defined and trick.Principal.id is defined %}
-                        <input type="file" name="resource[]" style="display:none"/>
-                        <button type="button" class="edit_resource" data-action="{{ path('media_edit', { slug: trick.slug, id: trick.Principal.id }) }}"><i class="fas fa-edit"></i></button>
-                        <button type="button" data-action="{{ path('media_delete', { slug: trick.slug, id: trick.Principal.id }) }}" class="delete_img"><i class="fas fa-trash-alt"></i></button>
-                    {% else %}
-                        <button type="button" id="add_file_principal" class="hand_cursor" data-alreadyclicked="false"><i class="fas fa-plus-circle"></i></button>
-                    {% endif %}
-                </div>
+                {% if app.user %}
+                    <div class="edit_delete">
+                        {% if trick is defined and trick.Principal is defined and trick.Principal.id is defined %}
+                            <input type="file" name="resource[]" style="display:none"/>
+                            <button type="button" class="edit_resource" data-action="{{ path('media_edit', { slug: trick.slug, id: trick.Principal.id }) }}"><i class="fas fa-edit"></i></button>
+                            <button type="button" data-action="{{ path('media_delete', { slug: trick.slug, id: trick.Principal.id }) }}" class="delete_img"><i class="fas fa-trash-alt"></i></button>
+                        {% else %}
+                            <button type="button" id="add_file_principal" class="hand_cursor" data-alreadyclicked="false"><i class="fas fa-plus-circle"></i></button>
+                        {% endif %}
+                    </div>
+                {% endif %}
                 <div id="upload_principal_input"></div>
             </div>
         </div>
@@ -28,7 +30,7 @@
         <div class="row" id="display_images">
                 {% if trick is defined %}
                     {% for resource in trick.resources if resource.principal != true %}
-                            <div class="col-md-auto">
+                            <div class="col-md-auto col-xl-auto col-md-auto col-sm-auto">
                                 <div class="card" style="object-fit: contain;">
                                     {% if resource.type == 'img' %}
                                         <img src="{{ files_directory ~ resource.name }}" width="225" height="120"/>
@@ -36,16 +38,19 @@
                                         <video src="{{ files_directory ~ resource.name }}"></video>
                                     {% endif %}
                                 </div>
-                                <div class="edit_delete">
-                                    <input type="file" name="resource[]" style="display:none;"/>
-                                    <button type="button" class="edit_resource" data-action="{{ path('media_edit', { slug: trick.slug, id: resource.id}) }}"><i class="fas fa-edit"></i></button>
-                                    <button type="button" data-action="{{ path('media_delete', { slug: trick.slug, id: resource.id}) }}" class="delete_img"><i class="fas fa-trash-alt"></i></button>
-                                </div>
+
+                                {% if app.user %}
+                                    <div class="edit_delete">
+                                        <input type="file" name="resource[]" style="display:none;"/>
+                                        <button type="button" class="edit_resource" data-action="{{ path('media_edit', { slug: trick.slug, id: resource.id}) }}"><i class="fas fa-edit"></i></button>
+                                        <button type="button" data-action="{{ path('media_delete', { slug: trick.slug, id: resource.id}) }}" class="delete_img"><i class="fas fa-trash-alt"></i></button>
+                                    </div>
+                                {% endif %}
                             </div>
                         {% endfor %}
                 {% endif %}
 
-                <div class="col-md-auto">
+                <div class="col-md-auto col-xl-auto col-md-auto col-sm-auto">
                     <div id="upload_file">
                         <div id="trick_resources"
                              data-principal="{{ form_widget(form.resources.vars.prototype.principal)|e('html_attr') }}"
@@ -59,10 +64,12 @@
                                 {% endfor %}
                             </div>
                         </div>
-                        <!-- a hack -->
-                        <!-- {{ form_widget(form.resources) }} -->
-                        <button type="button" id="addFile" class="hand_cursor"><i class="fas fa-plus-circle"></i></button>
-                        {{ form_errors(form.resources) }}
+                            <!-- a hack -->
+                            <!-- {{ form_widget(form.resources) }} -->
+                            {% if app.user %}
+                                <button type="button" id="addFile" class="hand_cursor"><i class="fas fa-plus-circle"></i></button>
+                            {% endif %}
+                            {{ form_errors(form.resources) }}
                     </div>
                 </div>
         </div>
@@ -70,7 +77,7 @@
     <br/>
     <div class="container">
         <div class="row">
-            <div class="col">
+            <div class="col col-xl col-md col-sm">
                 {{ form_widget(form.id) }}
                 <div>
                     {{ form_label(form.name) }}
@@ -121,11 +128,11 @@
     <br/>
     <div class="container">
         <div class="row">
-            <div class="col mx-auto text-center">
-                {% if trick is defined %}
-                    <button type="submit" id="trick_delete" data-action="{{ path('trick_delete', {slug: trick.slug }) }}" class="btn btn-danger">Supprimer</button>
-                {% endif %}
-                {{ form_widget(form.save, {attr: {class: 'btn btn-primary' }}) }}
+            <div class="col mx-auto text-center col-xl-auto col-md-auto col-sm-auto">
+                    {% if trick is defined %}
+                        <button type="submit" id="trick_delete" data-action="{{ path('trick_delete', {slug: trick.slug }) }}" class="btn btn-danger">Supprimer</button>
+                    {% endif %}
+                    {{ form_widget(form.save, {attr: {class: 'btn btn-primary' }}) }}
             </div>
         </div>
     </div>

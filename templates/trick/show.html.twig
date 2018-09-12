@@ -4,7 +4,7 @@
     <br/>
     <div class="container" style="background: {{ trick.principal != null ?'url(' ~ files_directory ~ trick.principal.name ~ ')':'gray' }}; background-color: lightgrey; background-repeat: no-repeat; background-size: cover; background-position: top center;min-height: 340px;">
         <div class="row">
-            <div class="col-md-auto justify-content-center">
+            <div class="col-md-auto justify-content-center col-xl col-md col-sm">
                 <h6 class="text-center align-middle">{{ trick.name }}</h6>
             </div>
         </div>
@@ -13,14 +13,14 @@
     <div class="container">
         <div class="row">
             {% for resource in trick.resources if resource.principal != true %}
-                <div class="col-md-auto">
+                <div class="col-md-auto col-xl-auto col-sm-auto">
                     <div class="card" style="width:225px; height: 120px;">
                         <img src="{{ files_directory ~ resource.name }}" width="225" height="120" style="object-fit: contain;"/>
                     </div>
                 </div>
             {% endfor %}
             {% if trick.resources|length == 0 %}
-                <div class="col">
+                <div class="col col-sm col-md col-xl">
                     <p class="text-center">Aucune images associées à cette figure</p>
                 </div>
             {% endif %}
@@ -29,7 +29,7 @@
     <br/>
     <div class="container">
         <div class="row">
-            <div class="col">
+            <div class="col col-xl col-md col-sm">
                 <p>
                     {{ trick.description }}
                 </p>
@@ -42,7 +42,7 @@
     <div class="container">
         <div class="row">
             <hr/>
-            <div class="col">
+            <div class="col col-xl col-md col-sm">
                 <hr class="dropdown-divider">
                     {{ form_start(form, {'action': '/trick/show/' ~ trick.slug, 'attr': {'novalidate': 'novalidate'} }) }}
                         <div>
@@ -63,7 +63,7 @@
     <div class="container">
         <div class="row">
             {% for comment in trick.comments %}
-                <div class="col-12 comments">
+                <div class="col-12 comments col-xl-12 col-md-12 col-sm-12">
                     <div class="media">
                         <!-- bien mettre une image par defaut -->
                         <img class="mr-3" src="https://via.placeholder.com/64x64" alt="Generic placeholder image">

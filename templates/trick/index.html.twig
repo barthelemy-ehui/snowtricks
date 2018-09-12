@@ -1,12 +1,12 @@
 {% extends 'base.html.twig' %}
-{% block title %}Ensemble des figures{% endblock %}
+{% block title %}Figures{% endblock %}
 {% block error %}{% endblock %}
 {% block body %}
     <br/>
     <div class="container">
         <div class="row">
             {% for trick in tricks %}
-                <div class="col-md-auto justify-content-center tricks">
+                <div class="col-md-auto tricks col-md col-sm">
                     <div class="card">
                         <!-- 225px/120px-->
                         <img src="{{ trick.getThumbnailOrDefault() ? files_directory ~ trick.getThumbnailOrDefault():'/build/css/imgs/trick_logo.png' }}" width="225px" height="120px"/>

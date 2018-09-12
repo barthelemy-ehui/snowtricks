@@ -151,11 +151,6 @@ class TrickController extends Controller
     
         $form = $formOrRedirect['form'];
 
-        // $this->redirectToRoute('show_trick', [
-        //    'slug' => $trick->getSlug()
-        // ]);
-        //dd($trick);
-
         return $this->render('trick/edit.html.twig', [
            'form' => $form->createView(),
            'trick' => $trick
@@ -171,11 +166,20 @@ class TrickController extends Controller
         $form = $this->createForm(TrickType::class, $trick);
         $form->handleRequest($request);
         
+        
         if($form->isSubmitted() && $form->isValid()) {
             if(!empty($trick->getResources())) {
-                
                 /** @var Resource $resource */
+                
                 foreach ($trick->getResources() as $resource) {
+                    $resource->setTrick($trick);
+                    if((int) $resource->getId()) {
+                        $resource->setName($resource->getFilename());
+                        continue;
+                    }
+                    
+                    if(is_null($resource->getName())){ break;}
+                    
                     $filenamePath = $resource->getName();
                     
                     /** @var UploadedFile $file */
@@ -185,7 +189,6 @@ class TrickController extends Controller
                     $resource->setName($filename);
                     $resource->setType($type);
                 }
-
             }
             $trick = $this->trickRepository->save($form->getData());
             return ['redirect'=>true];

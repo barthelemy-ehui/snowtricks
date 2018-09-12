@@ -1,17 +1,54 @@
 {% extends 'base.html.twig' %}
 {% block title %} Editer figure {% endblock %}
 {% block body %}
-    <div class="container">
-        <div class="row">
-            <div class="col">
-                {{ form_start(form, {action:'/trick/edit/'~trick.slug,'attr': {'novalidate': 'novalidate'}}) }}
-                    {{ include('trick/_form.html.twig') }}
-                {{ form_end(form) }}
-                <form></form>
-                <form action="{{ path('trick_delete', {slug: trick.slug }) }}">
-                    <button type="submit" id="trick_delete">Supprimer</button>
-                </form>
-            </div>
-        </div>
-    </div>
+    <br/>
+    {{ form_start(form,{'attr': {'novalidate': 'novalidate','id':'editForm'}}) }}
+        {{ include('trick/_form.html.twig') }}
+    {{ form_end(form) }}
+    <script type="application/javascript">
+
+        var editUrlAction = '/trick/edit/' + '{{ trick.slug }}';
+        var editResources = document.querySelectorAll('.edit_resource');
+        editResources.forEach(function(el){
+            el.addEventListener('click', function(evt){
+
+                var prevEl = evt.currentTarget.previousElementSibling;
+                prevEl.click();
+
+                var editUrlAction = evt.currentTarget.dataset.action;
+
+                var nextEl = evt.currentTarget.nextElementSibling;
+                prevEl.addEventListener('change', function(evt) {
+                    addActionToForm(editUrlAction);
+                });
+
+            })
+        });
+
+
+        var deleteImages = document.querySelectorAll('.delete_img');
+        if(deleteImages.length>0) {
+            deleteImages.forEach(function(deleteImage){
+                deleteImage.addEventListener('click', function(evt){
+                    evt.preventDefault();
+                    var deleteUrlAction = evt.currentTarget.dataset.action;
+                    addActionToForm(deleteUrlAction);
+                });
+            });
+        }
+
+        var deleteTrick = document.querySelector('#trick_delete');
+        if(deleteTrick !== null){
+            deleteTrick.addEventListener('click', function(evt){
+                evt.preventDefault();
+                addActionToForm(evt.currentTarget.dataset.action);
+            });
+        }
+
+        function addActionToForm(actionUrl) {
+            var form = document.querySelector('#editForm');
+            form.action = actionUrl;
+            form.submit();
+        }
+    </script>
 {% endblock %}

@@ -40,6 +40,8 @@ class Resource
      */
     private $principal;
 
+    private $filename;
+    
     public function getId()
     {
         return $this->id;
@@ -92,5 +94,30 @@ class Resource
 
         return $this;
     }
+    
+    /**
+     * @param mixed $id
+     */
+    public function setId($id): void
+    {
+        $this->id = $id;
+    }
+    
+    /**
+     * @return mixed
+     */
+    public function getFilename()
+    {
+        return $this->filename;
+    }
+    
+    /**
+     * @param mixed $filename
+     */
+    public function setFilename($filename): void
+    {
+        $this->filename = $filename;
+    }
+    
     
 }

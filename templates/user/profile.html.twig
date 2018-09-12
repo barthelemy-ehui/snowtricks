@@ -19,34 +19,38 @@
                     <div>
                         {{ form_widget(form.id) }}
                         {{ form_label(form.firstname) }}
-                        {{ form_widget(form.firstname) }}
+                        {{ form_widget(form.firstname, {attr: {class: 'form-control'}}) }}
                         {{ form_errors(form.firstname) }}
                     </div>
                     <div>
                         {{ form_label(form.lastname) }}
-                        {{ form_widget(form.lastname) }}
+                        {{ form_widget(form.lastname, {attr: {class: 'form-control'}}) }}
                         {{ form_errors(form.lastname) }}
                     </div>
                     <div>
                         {{ form_label(form.username) }}
-                        {{ form_widget(form.username) }}
+                        {{ form_widget(form.username, {attr: {class: 'form-control'}}) }}
                         {{ form_errors(form.username) }}
                     </div>
                     <div>
                         {{ form_label(form.email) }}
-                        {{ form_widget(form.email) }}
+                        {{ form_widget(form.email, {attr: {class: 'form-control'}}) }}
                         {{ form_errors(form.email) }}
                     </div>
+
+                    <!-- Modification de mot de passe en passant par le bouton modifier -->
+                    {#
+                        <div>
+                            {{ form_label(form.plainPassword.first) }}
+                            {{ form_widget(form.plainPassword.first ) }}
+                            {{ form_errors(form.plainPassword.first) }}
+                            {{ form_label(form.plainPassword.second) }}
+                            {{ form_widget(form.plainPassword.second ) }}
+                            {{ form_errors(form.plainPassword.second) }}
+                        </div>
+                     #}
                     <div>
-                        {{ form_label(form.plainPassword.first) }}
-                        {{ form_widget(form.plainPassword.first, {value: app.user.password }) }}
-                        {{ form_errors(form.plainPassword.first) }}
-                        {{ form_label(form.plainPassword.second) }}
-                        {{ form_widget(form.plainPassword.second, {value: app.user.password }) }}
-                        {{ form_errors(form.plainPassword.second) }}
-                    </div>
-                    <div>
-                        {{ form_widget(form.save) }}
+                        {{ form_widget(form.save, {attr: {class: 'btn btn-primary'}}) }}
                     </div>
                     {{ form_end(form) }}
                 </div>

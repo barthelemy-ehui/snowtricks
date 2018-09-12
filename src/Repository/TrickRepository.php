@@ -24,13 +24,9 @@ class TrickRepository extends ServiceEntityRepository
         if(is_null($data->getId())){
             $em->persist($data);
         } else {
-            /*if(empty($data->getResource())){
-                $resource = $em->getRepository(Trick::class)
-                    ->findOneBy(['id' => $data->getId()])->getResource();
-                $data->setResource($resource);
-            }*/
            $em->merge($data);
         }
+        
         $em->flush();
         
         return $data;

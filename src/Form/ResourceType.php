@@ -7,6 +7,7 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\CallbackTransformer;
 use Symfony\Component\Form\Extension\Core\Type\FileType;
+use Symfony\Component\Form\Extension\Core\Type\HiddenType;
 use Symfony\Component\Form\Extension\Core\Type\RadioType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
@@ -28,14 +29,16 @@ class ResourceType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-        ->add('name', FileType::class, [
+            ->add('id', HiddenType::class)
+            ->add('filename', HiddenType::class)
+            ->add('name', FileType::class, [
             'label' => false,
             'required' => true,
             'constraints' => [
                 new File()
             ]
         ])
-       ->add('principal', RadioType::class, [
+       ->add('principal', HiddenType::class, [
            'label' => false
        ]);
        

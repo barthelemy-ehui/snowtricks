@@ -45,3 +45,4 @@ security:
          - { path: ^/trick/edit, roles: ROLE_USER, methods: [POST] }
          - { path: ^/trick/show, roles: ROLE_USER, methods: [POST] }
          - { path: ^/profile, roles: ROLE_USER, methods: [GET,POST] }
+         - { path: ^/trick/delete, roles: ROLE_USER, methods: [GET,POST] }

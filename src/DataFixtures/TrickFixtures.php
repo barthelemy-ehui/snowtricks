@@ -2,6 +2,7 @@
 
 namespace App\DataFixtures;
 
+use App\Entity\Resource;
 use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Common\DataFixtures\DependentFixtureInterface;
 use Doctrine\Common\DataFixtures\OrderedFixtureInterface;
@@ -9,7 +10,7 @@ use Doctrine\Common\Persistence\ObjectManager;
 use Faker\Factory;
 use App\Entity\Trick;
 
-class TrickFixtures extends Fixture implements /*DependentFixtureInterface,*/ OrderedFixtureInterface
+class TrickFixtures extends Fixture implements OrderedFixtureInterface
 {
     public const TRICK = 'trick';
     
@@ -17,18 +18,16 @@ class TrickFixtures extends Fixture implements /*DependentFixtureInterface,*/ Or
     {
         $faker = Factory::create();
         
-        for($i=0;$i<2;$i++){
+        for($i=0;$i<50;$i++){
             $trick = new Trick();
-            $trick->setName($faker->sentence());
+            $trick->setName($faker->sentence(1));
             $trick->setDescription($faker->sentence);
             $trick->setCreatedAt($faker->dateTime);
             $trick->setUpdatedAt($faker->dateTime);
-            $trick->setResource($faker->imageUrl());
             $trick->setUser($this->getReference(UserFixtures::USER));
             $trick->setCategory($this->getReference(CategoryFixtures::CATEGORY));
             $trick->setSlug($faker->slug);
             $manager->persist($trick);
-    
             $this->setReference(self::TRICK, $trick);
         }
         

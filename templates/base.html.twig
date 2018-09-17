@@ -2,13 +2,34 @@
 <html>
     <head>
         <meta charset="UTF-8">
-        <title>{% block title %}Welcome!{% endblock %}</title>
+        <title>{% block title %}Snowtricks{% endblock %}</title>
+        <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.2.0/css/all.css" integrity="sha384-hWVjflwFxL6sNzntih27bfxkr27PmbbK/iSvJ+a4+0owXq79v+lsFkW54bOGbiDQ" crossorigin="anonymous">
         <link rel="stylesheet" href="{{ asset('build/css/app.css') }}" />
         {% block stylesheets %}{% endblock %}
     </head>
     <body>
-        {% block body %}{% endblock %}
-        {% block javascripts %}{% endblock %}
-        <script src="{{ asset('build/js/app.js') }}"></script>
+    <header class="container">
+        <div class="row">
+                <aside class="col-2">
+                    <a href="/">
+                        <img src="/build/css/imgs/trick_logo.png" width="125px;"/>
+                    </a>
+                </aside>
+                <nav class="col-10 nav navbar-expand-sm justify-content-end">
+                    <div class="nav-item"><a href="{{ path('trick') }}" class="nav-link">Tricks</a></div>
+                    {% if app.user %}
+                        <div class="nav-item"><a href="{{ path('user_profile') }}" class="nav-link">Profile</a></div>
+                        <div class="nav-item"><a href="{{ path('logout') }}" class="nav-link">Se déconnecter</a></div>
+                    {% else %}
+                        <div class="nav-item"><a href="{{ path('login') }}" class="nav-link">Se connecter</a></div>
+                        <div class="nav-item"><a href="{{ path('user_registration') }}" class="nav-link">S'inscrire</a></div>
+                    {% endif %}
+                </nav>
+            </div>
+    </header>
+    {{ include('_helper/_messages.html.twig') }}
+    {% block body %}{% endblock %}
+    {% block javascripts %}{% endblock %}
+    <script src="{{ asset('build/js/app.js') }}"></script>
     </body>
 </html>

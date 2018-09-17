@@ -1,31 +1,32 @@
 {% extends 'base.html.twig' %}
-
-{% block title %}Ensemble des figures{% endblock %}
-
+{% block title %}Figures{% endblock %}
 {% block body %}
-    {% for label, messages in app.flashes(['success','failed']) %}
-        {% for message in messages %}
-            <div>
-                <strong>{{ message }}</strong>
-            </div>
-        {% endfor %}
-    {% endfor %}
-
-<!-- La liste des tricks à afficher-->
+    <br/>
     <div class="container">
-    {% for trick in tricks %}
-        <div class="item">
-            <div>
-                <a href="{{ path('show_trick',{'slug':trick.slug}) }}"><strong>{{ trick.name }}</strong></a>
-            </div>
-            <div>
-                <p>{{ trick.description }}</p>
-            </div>
-            <div>
-                <em>{{ trick.user.username }}</em> - <em>{{ trick.category.name }}</em>
-            </div>
+        <div class="row">
+            {% for trick in tricks %}
+                <div class="col-md-auto tricks col-md col-sm">
+                    <div class="card">
+                        <!-- 225px/120px-->
+                        <img src="{{ trick.getThumbnailOrDefault() ? files_directory ~ trick.getThumbnailOrDefault():'/build/css/imgs/trick_logo.png' }}" width="225px" height="120px"/>
+                        <ul class="list-inline">
+                            <li class="list-inline-item">
+                                <a href="{{ path('show_trick', {slug: trick.slug}) }}">{{ trick.name }}</a>
+                            </li>
+                            {% if app.user %}
+                                <li class="list-inline-item">
+                                    <a href="{{ path('trick_edit', {slug: trick.slug}) }}"><i class="fas fa-edit"></i></a>
+                                </li>
+                                <li class="list-inline-item">
+                                    <form action="{{ path('trick_delete', {slug: trick.slug }) }}">
+                                        <button type="submit" class="trick_delete"><i class="fas fa-trash-alt"></i></button>
+                                    </form>
+                                </li>
+                            {% endif %}
+                        </ul>
+                    </div>
+                </div>
+            {% endfor %}
         </div>
-        <hr/>
-    {% endfor %}
     </div>
 {% endblock %}

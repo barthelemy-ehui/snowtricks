@@ -1,0 +1,12 @@
+<div class="container">
+    <div class="row">
+        <div class="col">
+            {% for label, messages in app.flashes(['success','failed']) %}
+                {% set labelText = 'success'?'bg-success':'bg-danger' %}
+                {% for message in messages %}
+                        <p class="{{ labelText }} text-white">{{ message }}</p>
+                {% endfor %}
+            {% endfor %}
+        </div>
+    </div>
+</div>

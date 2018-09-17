@@ -48,10 +48,7 @@ class User implements UserInterface, \Serializable
      */
     private $email;
     
-    /**
-     * @Assert\NotBlank()
-     * @Assert\Length(max=4096)
-     */
+    
     private $plainPassword;
     
     /**
@@ -98,6 +95,16 @@ class User implements UserInterface, \Serializable
      * @ORM\Column(name="is_active", type="boolean")
      */
     private $isActive;
+
+    /**
+     * @ORM\Column(type="string", length=255, nullable=true)
+     */
+    private $picture;
+
+    private $currentPassword;
+    
+
+    private $changePassword;
     
     public function __construct()
     {
@@ -117,7 +124,7 @@ class User implements UserInterface, \Serializable
         return $this->firstname;
     }
 
-    public function setFirstname(string $firstname): self
+    public function setFirstname(?string $firstname): self
     {
         $this->firstname = $firstname;
 
@@ -129,7 +136,7 @@ class User implements UserInterface, \Serializable
         return $this->lastname;
     }
 
-    public function setLastname(string $lastname): self
+    public function setLastname(?string $lastname): self
     {
         $this->lastname = $lastname;
 
@@ -141,7 +148,7 @@ class User implements UserInterface, \Serializable
         return $this->username;
     }
 
-    public function setUsername(string $username): self
+    public function setUsername(?string $username): self
     {
         $this->username = $username;
 
@@ -153,7 +160,7 @@ class User implements UserInterface, \Serializable
         return $this->email;
     }
 
-    public function setEmail(string $email): self
+    public function setEmail(?string $email): self
     {
         $this->email = $email;
 
@@ -424,5 +431,51 @@ class User implements UserInterface, \Serializable
     public function setId($id): void
     {
         $this->id = $id;
+    }
+
+    public function getPicture(): ?string
+    {
+        return $this->picture;
+    }
+
+    public function setPicture(?string $picture): self
+    {
+        $this->picture = $picture;
+
+        return $this;
+    }
+    
+    /**
+     * @return mixed
+     */
+    public function getCurrentPassword()
+    {
+        return $this->currentPassword;
+    }
+    
+    /**
+     * @param mixed $currentPassword
+     */
+    public function setCurrentPassword($currentPassword): void
+    {
+        $this->currentPassword = $currentPassword;
+    }
+    
+    /**
+     * @return mixed
+     */
+    
+    public function getChangePassword()
+    {
+        return $this->changePassword;
+    }
+    
+    
+    /**
+     * @param mixed $changePassword
+     */
+    public function setChangePassword($changePassword): void
+    {
+        $this->changePassword = $changePassword;
     }
 }

@@ -70,13 +70,14 @@ class Trick
     private $slug;
 
     /**
-     * @ORM\Column(type="string", length=255, nullable=true)
+     * @ORM\OneToMany(targetEntity="App\Entity\Resource", mappedBy="trick", cascade={"persist","merge","remove","refresh"})
      */
-    private $resource;
+    private $resources;
 
     public function __construct()
     {
         $this->comments = new ArrayCollection();
+        $this->resources = new ArrayCollection();
     }
 
 
@@ -199,18 +200,6 @@ class Trick
 
         return $this;
     }
-
-    public function getResource(): ?string
-    {
-        return $this->resource;
-    }
-
-    public function setResource(?string $resource): self
-    {
-        $this->resource = $resource;
-
-        return $this;
-    }
     
     /**
      * @param mixed $id
@@ -219,5 +208,61 @@ class Trick
     {
         $this->id = $id;
     }
+
+    /**
+     * @return Collection|Resource[]
+     */
+    public function getResources(): Collection
+    {
+        return $this->resources;
+    }
+
+    public function addResource(Resource $resource): self
+    {
+        if (!$this->resources->contains($resource)) {
+            $this->resources[] = $resource;
+            $resource->setTrick($this);
+        }
+
+        return $this;
+    }
+
+    public function removeResource(Resource $resource): self
+    {
+        if ($this->resources->contains($resource)) {
+            $this->resources->removeElement($resource);
+            // set the owning side to null (unless already changed)
+            if ($resource->getTrick() === $this) {
+                $resource->setTrick(null);
+            }
+        }
+
+        return $this;
+    }
     
+    public function getPrincipal() {
+        
+        $principal = null;
+        
+        foreach($this->resources as $resource) {
+            if($resource->getPrincipal()){
+                $principal = $resource;
+                break;
+            }
+        }
+        return $principal;
+    }
+    
+    public function getThumbnailOrDefault() {
+        
+        if($this->resources->count() > 0) {
+            $principal = $this->getPrincipal();
+            if($principal) {
+                return $principal->getName();
+            }
+            return $this->resources->first()->getName();
+        }
+        
+        return null;
+    }
 }

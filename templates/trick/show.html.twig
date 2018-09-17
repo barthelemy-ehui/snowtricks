@@ -1,67 +1,132 @@
 {% extends 'base.html.twig' %}
-
 {% block title %}{{ trick.name }}{% endblock %}
-
 {% block body %}
-    <div>
-        <!-- Todo: à afficher seulement si on est connecter -->
-        <a href="{{ path('trick_edit',{'slug': trick.slug}) }}">Editer</a>
-    </div>
-        <div>
-            <strong>{{ trick.name }}</strong>
-        </div>
-    {% if trick.resource %}
-        <div>
-            <!-- todo afficher selon si c'est video ou image-->
-            <img src="{{ files_directory ~ trick.resource }}" alt="">
-        </div>
-    {% endif %}
-
-    <div>
-        <p>
-            {{ trick.description }}
-        </p>
-    </div>
-    <div>
-        <em>{{ trick.user.username }}</em> | <em>{{ trick.category.name }}</em>
-    </div>
-
     <br/>
-    <div>
-        <strong>
-            Discussions:
-        </strong>
+    <div class="container containerDisplayPrincipal" style="background: {{ trick.principal != null ?'url(' ~ files_directory ~ trick.principal.name ~ ')':'gray' }};">
+        <div class="row h-100 align-items-center">
+            <div class="col col-md-auto justify-content-center col-xl col-md col-sm">
+                <h6 class="text-center text-white">{{ trick.name }}</h6>
+            </div>
+        </div>
     </div>
     <br/>
-    <div>
-        {% for comment in trick.comments %}
-        <div>
-            <div>
-                {{ comment.content }}
-            </div>
-            <div>
-                <strong>Auteur:</strong><em>{{ comment.user.username }}</em>
-                <strong>Date:</strong><em>{{ comment.createdat|date('d-m-Y') }}</em>
-            </div>
-        </div>
-        <br/>
-        {% endfor %}
-
-        <div>
-        {{ form_start(form, {'action': '/trick/show/' ~ trick.slug, 'attr': {'novalidate': 'novalidate'} }) }}
-            <div>
-                {{ form_label(form.content) }}
-                {{ form_widget(form.content) }}
-                {{ form_errors(form.content) }}
-                {{ form_widget(form.trick) }}
-            </div>
-            <div>
-                {{ form_widget(form.save) }}
-            </div>
-            <div>
-                {{ form_widget(form.save) }}
-            </div>
-        {{ form_end(form) }}
+    <div class="container">
+        <div class="row">
+            {% for resource in trick.resources if resource.principal != true %}
+                <div class="col-md-auto col-xl-auto col-sm-auto">
+                    <div class="card" style="width:225px; height:120px;">
+                        <img src="{{ files_directory ~ resource.name }}" width="225" height="120" style="object-fit: contain;"/>
+                    </div>
+                </div>
+            {% endfor %}
+            {% if trick.resources|length == 0 %}
+                <div class="col col-sm col-md col-xl">
+                    <p class="text-center">Aucune images associées à cette figure</p>
+                </div>
+            {% endif %}
         </div>
     </div>
+    <br/>
+    <div class="container">
+        <div class="row">
+            <div class="col col-xl col-md col-sm">
+                <p>
+                    {{ trick.description }}
+                </p>
+                <div class="blockquote-footer">
+                    <strong>{{ trick.user.username }}</strong> | <strong>{{ trick.category.name }}</strong> | <strong> {{ trick.createdat|date('d-m-Y') }} </strong>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="container">
+        <div class="row">
+            <div class="col col-xl col-md col-sm">
+                <a href="{{ path('trick_edit', {slug: trick.slug}) }}" class="float-right"><i class="fas fa-edit"></i></a>
+            </div>
+        </div>
+    </div>
+    <div class="container">
+        <div class="row">
+            <hr/>
+            <div class="col col-xl col-md col-sm">
+                <hr class="dropdown-divider">
+                    {{ form_start(form, {'action': '/trick/show/' ~ trick.slug, 'attr': {'novalidate': 'novalidate'} }) }}
+                        <div>
+                            {{ form_label(form.content) }}
+                            {{ form_widget(form.content,{attr: {class:'form-control'}}) }}
+                            {{ form_errors(form.content) }}
+                            {{ form_widget(form.trick) }}
+                        </div>
+                        <div>
+                            <br/>
+                            {{ form_widget(form.save, {attr: {class: 'btn btn-primary'}}) }}
+                        </div>
+                    {{ form_end(form) }}
+                <hr class="dropdown-divider">
+            </div>
+        </div>
+    </div>
+    <div class="container">
+        <div class="row">
+            {% for comment in trick.comments %}
+                <div class="col-12 comments col-xl-12 col-md-12 col-sm-12">
+                    <div class="media">
+                        {% if app.user.picture %}
+                            <img class="mr-3" src="{{ files_directory ~ app.user.picture }}" width="64" height="64" alt="photo d'utilisateur">
+                        {% else %}
+                            <img class="mr-3" src="https://via.placeholder.com/64x64" width="64" height="64" alt="Photo générique">
+                        {% endif %}
+                        <div class="media-body">
+                            <!-- <h5 class="mt-0">Media heading</h5> -->
+                            <p>{{ comment.content }}</p>
+                            <div class="blockquote-footer">
+                                <strong>Auteur:</strong><em>{{ comment.user.username }}</em>
+                                <strong>Date:</strong><em>{{ comment.createdat|date('d-m-Y') }}</em>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+
+    <script type="application/javascript">
+        var imgs = document.querySelectorAll('.col-md-auto .card img');
+
+        if(imgs.length>0){
+            var imgsNodes =  [];
+
+            imgs.forEach(function(img){
+                img.addEventListener('mouseover',function(evt){
+                    var imgPath = evt.currentTarget.src;
+                    // console.log(img);
+
+                    var divEl = document.createElement('div');
+                    divEl.style.position = 'fixed';
+                    divEl.style.top = '0px';
+                    divEl.style.left = '50%';
+
+                    var imgEl = document.createElement('img');
+                    imgEl.src = imgPath;
+                    imgEl.style.width = '500px';
+                    divEl.style.marginLeft = -(500/2)+'px';
+                    divEl.appendChild(imgEl);
+
+                    imgsNodes.push(divEl);
+
+                    document.body.appendChild(divEl);
+
+                });
+
+                img.addEventListener('mouseout',function(evt){
+                    imgsNodes.forEach(function (bigImgToRemove) {
+                        bigImgToRemove.remove();
+                    })
+                });
+            });
+
+        }
+    </script>
 {% endblock %}

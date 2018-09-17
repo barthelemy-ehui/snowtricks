@@ -49,7 +49,7 @@ class RegistrationController extends AbstractController
     public function register(Request $request, UserPasswordEncoderInterface $passwordEncoder)
     {
         $user = new User();
-        $form = $this->createForm(UserType::class, $user);
+        $form = $this->createForm(UserType::class, $user, ['attr' => ['registration' => true]]);
         
         $form->handleRequest($request);
         if($form->isSubmitted() && $form->isValid()) {
@@ -71,7 +71,8 @@ class RegistrationController extends AbstractController
                 $urlGenerate,
                 SendToken::ACCOUNT_MESSAGE);
    
-            return new Response('Un email vous a été envoyé pour activer votre compte.');
+            $this->addFlash('success', 'Un email vous a été envoyé pour activer votre compte.');
+            return $this->redirectToRoute('trick');
         }
         
         return $this->render('registration/register.html.twig', [

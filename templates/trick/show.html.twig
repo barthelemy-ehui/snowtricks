@@ -2,10 +2,10 @@
 {% block title %}{{ trick.name }}{% endblock %}
 {% block body %}
     <br/>
-    <div class="container" style="background: {{ trick.principal != null ?'url(' ~ files_directory ~ trick.principal.name ~ ')':'gray' }}; background-color: lightgrey; background-repeat: no-repeat; background-size: cover; background-position: top center;min-height: 340px;">
-        <div class="row">
-            <div class="col-md-auto justify-content-center col-xl col-md col-sm">
-                <h6 class="text-center align-middle">{{ trick.name }}</h6>
+    <div class="container containerDisplayPrincipal" style="background: {{ trick.principal != null ?'url(' ~ files_directory ~ trick.principal.name ~ ')':'gray' }};">
+        <div class="row h-100 align-items-center">
+            <div class="col col-md-auto justify-content-center col-xl col-md col-sm">
+                <h6 class="text-center text-white">{{ trick.name }}</h6>
             </div>
         </div>
     </div>
@@ -14,7 +14,7 @@
         <div class="row">
             {% for resource in trick.resources if resource.principal != true %}
                 <div class="col-md-auto col-xl-auto col-sm-auto">
-                    <div class="card" style="width:225px; height: 120px;">
+                    <div class="card" style="width:225px; height:120px;">
                         <img src="{{ files_directory ~ resource.name }}" width="225" height="120" style="object-fit: contain;"/>
                     </div>
                 </div>
@@ -36,6 +36,13 @@
                 <div class="blockquote-footer">
                     <strong>{{ trick.user.username }}</strong> | <strong>{{ trick.category.name }}</strong> | <strong> {{ trick.createdat|date('d-m-Y') }} </strong>
                 </div>
+            </div>
+        </div>
+    </div>
+    <div class="container">
+        <div class="row">
+            <div class="col col-xl col-md col-sm">
+                <a href="{{ path('trick_edit', {slug: trick.slug}) }}" class="float-right"><i class="fas fa-edit"></i></a>
             </div>
         </div>
     </div>
@@ -65,8 +72,11 @@
             {% for comment in trick.comments %}
                 <div class="col-12 comments col-xl-12 col-md-12 col-sm-12">
                     <div class="media">
-                        <!-- bien mettre une image par defaut -->
-                        <img class="mr-3" src="https://via.placeholder.com/64x64" alt="Generic placeholder image">
+                        {% if app.user.picture %}
+                            <img class="mr-3" src="{{ files_directory ~ app.user.picture }}" width="64" height="64" alt="photo d'utilisateur">
+                        {% else %}
+                            <img class="mr-3" src="https://via.placeholder.com/64x64" width="64" height="64" alt="Photo générique">
+                        {% endif %}
                         <div class="media-body">
                             <!-- <h5 class="mt-0">Media heading</h5> -->
                             <p>{{ comment.content }}</p>

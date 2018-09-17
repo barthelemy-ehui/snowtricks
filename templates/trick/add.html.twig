@@ -1,13 +1,7 @@
 {% extends 'base.html.twig' %}
-{% block title %} Ajouter figure {% endblock %}
+{% block title %}Ajouter figure {% endblock %}
 {% block body %}
-    <div class="container">
-        <div class="row">
-            <div class="col">
-                {{ form_start(form, {'attr': {'novalidate': 'novalidate'}}) }}
-                    {{ include('trick/_form.html.twig') }}
-                {{ form_end(form) }}
-            </div>
-        </div>
-    </div>
+    {{ form_start(form, {'attr': {'novalidate': 'novalidate'}}) }}
+        {{ include('trick/_form.html.twig') }}
+    {{ form_end(form) }}
 {% endblock %}

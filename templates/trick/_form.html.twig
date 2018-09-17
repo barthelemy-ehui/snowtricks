@@ -1,9 +1,9 @@
 <!-- Bien mettre en place la structure -->
-    <div class="container" style="background: {{ trick is defined and trick.principal != null and trick.Principal.type == 'img' ?'url(' ~ files_directory ~ trick.principal.name ~ ')':'gray' }}; background-color: lightgrey; background-repeat: no-repeat; background-position: top center; background-size: cover; min-height: 340px;">
-        <div class="row">
-            <div class="col col-xl col-md col-sm">
+    <div class="container containerDisplayPrincipal" style="background: {{ trick is defined and trick.principal != null and trick.Principal.type == 'img' ?'url(' ~ files_directory ~ trick.principal.name ~ ')':'gray' }};">
+        <div class="row h-100">
+            <div class="col col-md-auto justify-content-center col-xl col-md col-sm">
                 {% if trick is defined %}
-                    <h6 class="text-center">{{ trick.name }}</h6>
+                    <h6 class="text-center text-white">{{ trick.name }}</h6>
                 {% endif %}
 
                 {% if trick is defined and trick.Principal and trick.Principal.type == 'video' %}
@@ -29,7 +29,8 @@
     <div class="container">
         <div class="row" id="display_images">
                 {% if trick is defined %}
-                    {% for resource in trick.resources if resource.principal != true %}
+                    <div class="col-md-auto justify-content-center col-xl col-md col-sm">
+                        {% for resource in trick.resources if resource.principal != true %}
                             <div class="col-md-auto col-xl-auto col-md-auto col-sm-auto">
                                 <div class="card" style="object-fit: contain;">
                                     {% if resource.type == 'img' %}
@@ -48,6 +49,7 @@
                                 {% endif %}
                             </div>
                         {% endfor %}
+                     </div>
                 {% endif %}
 
                 <div class="col-md-auto col-xl-auto col-md-auto col-sm-auto">

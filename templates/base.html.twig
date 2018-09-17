@@ -8,24 +8,6 @@
         {% block stylesheets %}{% endblock %}
     </head>
     <body>
-    {% block error %}
-        <div class="container">
-            <div class="row">
-                <div class="col">
-                    {% for label, messages in app.flashes(['success','failed']) %}
-                        {% for message in messages %}
-                            <div>
-                                <strong>{{ message }}</strong>
-                            </div>
-                        {% endfor %}
-                    {% endfor %}
-                </div>
-            </div>
-        </div>
-    {% endblock %}
-
-    <!-- En tête -->
-    <!-- todo: rendre compatible mobile -->
     <header class="container">
         <div class="row">
                 <aside class="col-2">
@@ -36,8 +18,8 @@
                 <nav class="col-10 nav navbar-expand-sm justify-content-end">
                     <div class="nav-item"><a href="{{ path('trick') }}" class="nav-link">Tricks</a></div>
                     {% if app.user %}
-                        <div class="nav-item"><a href="{{ path('logout') }}" class="nav-link">Se déconnecter</a></div>
                         <div class="nav-item"><a href="{{ path('user_profile') }}" class="nav-link">Profile</a></div>
+                        <div class="nav-item"><a href="{{ path('logout') }}" class="nav-link">Se déconnecter</a></div>
                     {% else %}
                         <div class="nav-item"><a href="{{ path('login') }}" class="nav-link">Se connecter</a></div>
                         <div class="nav-item"><a href="{{ path('user_registration') }}" class="nav-link">S'inscrire</a></div>
@@ -45,6 +27,7 @@
                 </nav>
             </div>
     </header>
+    {{ include('_helper/_messages.html.twig') }}
     {% block body %}{% endblock %}
     {% block javascripts %}{% endblock %}
     <script src="{{ asset('build/js/app.js') }}"></script>

@@ -16,6 +16,8 @@ use Symfony\Component\Validator\Constraints as Assert;
  */
 class User implements UserInterface, \Serializable
 {
+    public const ROLE_USER = 'ROLE_USER';
+    
     /**
      * @ORM\Id()
      * @ORM\GeneratedValue()
@@ -111,7 +113,7 @@ class User implements UserInterface, \Serializable
         $this->comments = new ArrayCollection();
         $this->categories = new ArrayCollection();
         $this->tricks = new ArrayCollection();
-        $this->roles = ['ROLE_USER'];
+        $this->roles = [self::ROLE_USER];
     }
 
     public function getId()

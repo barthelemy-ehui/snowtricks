@@ -36,7 +36,7 @@
                                     {% if resource.type == 'img' %}
                                         <img src="{{ files_directory ~ resource.name }}" width="225" height="120"/>
                                     {% else %}
-                                        <video src="{{ files_directory ~ resource.name }}"></video>
+                                        <video src="{{ files_directory ~ resource.name }}" width="225" height="120" controls></video>
                                     {% endif %}
                                 </div>
 

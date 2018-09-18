@@ -15,7 +15,11 @@
             {% for resource in trick.resources if resource.principal != true %}
                 <div class="col-md-auto col-xl-auto col-sm-auto">
                     <div class="card" style="width:225px; height:120px;">
-                        <img src="{{ files_directory ~ resource.name }}" width="225" height="120" style="object-fit: contain;"/>
+                        {% if  resource.type == "img" %}
+                            <img src="{{ files_directory ~ resource.name }}" width="225" height="120" style="object-fit: contain;"/>
+                        {% else %}
+                            <video src="{{ files_directory ~ resource.name }}" width="225" height="120" controls></video>
+                        {% endif %}
                     </div>
                 </div>
             {% endfor %}

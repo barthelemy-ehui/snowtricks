@@ -1,17 +1,23 @@
-{{ form_start(form, {'attr': {'novalidate': 'novalidate'}}) }}
-    <div>
-        {{ form_label(form.name) }}
-        {{ form_widget(form.name, {attr: {class: 'form-control'}}) }}
-        {{ form_errors(form.name) }}
-    </div>
+<div class="container">
+    <div class="row">
+        <div class="col">
+            {{ form_start(form, {'attr': {'novalidate': 'novalidate'}}) }}
+                <div>
+                    {{ form_label(form.name) }}
+                    {{ form_widget(form.name, {attr: {class: 'form-control'}}) }}
+                    {{ form_errors(form.name) }}
+                </div>
 
-    <div>
-        {{ form_label(form.description) }}
-        {{ form_widget(form.description, {attr: {class: 'form-control'}}) }}
-        {{ form_errors(form.description) }}
+                <div>
+                    {{ form_label(form.description) }}
+                    {{ form_widget(form.description, {attr: {class: 'form-control'}}) }}
+                    {{ form_errors(form.description) }}
+                </div>
+                <br/>
+                <div>
+                    {{ form_widget(form.save, {attr: {class: 'btn btn-primary'}}) }}
+                </div>
+            {{ form_end(form) }}
+        </div>
     </div>
-
-    <div>
-        {{ form_widget(form.save, {attr: {class: 'btn btn-primary'}}) }}
-    </div>
-{{ form_end(form) }}
+</div>

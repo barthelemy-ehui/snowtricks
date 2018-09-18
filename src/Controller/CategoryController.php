@@ -90,7 +90,12 @@ class CategoryController extends Controller
      */
     public function delete($id, $slug)
     {
-        $this->categoryRepository->delete($id);
+        try{
+            $this->categoryRepository->delete($id);
+        }catch (\Exception $e){
+            $this->addFlash('failed','Cette catégorie est déja utilisée. Impossible donc de la supprimer.');
+        }
+        
         if(!empty($slug)){
             return $this->redirectToRoute('trick_edit',['slug' => $slug]);
         }

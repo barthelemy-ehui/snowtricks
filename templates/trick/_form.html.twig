@@ -29,7 +29,7 @@
     <div class="container">
         <div class="row" id="display_images">
                 {% if trick is defined %}
-                    <div class="col-md-auto justify-content-center col-xl col-md col-sm">
+                    <!--<div class="col-md-auto justify-content-center col-xl col-md col-sm">-->
                         {% for resource in trick.resources if resource.principal != true %}
                             <div class="col-md-auto col-xl-auto col-md-auto col-sm-auto">
                                 <div class="card" style="object-fit: contain;">
@@ -49,7 +49,7 @@
                                 {% endif %}
                             </div>
                         {% endfor %}
-                     </div>
+                     <!--</div>-->
                 {% endif %}
 
                 <div class="col-md-auto col-xl-auto col-md-auto col-sm-auto">
@@ -101,29 +101,25 @@
 
                 <div>
                     {{ form_label(form.category) }}
-                    {{ form_widget(form.category, {attr: {class:'form-control'}}) }}
+                    {% if trick is defined %}
+                        {% set pathAdd = path('category_new', {slug:trick.slug}) %}
+                        {% set pathEdit = path('category_edit', {slug:trick.slug, id:0}) %}
+                        {% set pathDelete = path('category_delete', {slug:trick.slug, id:0}) %}
+                    {% else %}
+                        {% set pathAdd = path('category_new') %}
+                        {% set pathEdit = path('category_edit', {id:0}) %}
+                        {% set pathDelete = path('category_delete', {id:0}) %}
+                    {% endif %}
+                    <div class="input-group">
+                        {{ form_widget(form.category, {attr: {class:'form-control'}}) }}
+                        <div class="input-group-append">
+                            <div class="input-group-text"><a href="{{ pathAdd }}" class="text-black-50"><i class="fas fa-plus-circle"></i></a></div>
+                            <div class="input-group-text"><a id="categoryEdit" href="{{ pathEdit }}" class="text-black-50"><i class="fas fa-edit"></i></a></div>
+                            <div class="input-group-text"><a id="categoryDelete" href="{{ pathDelete }}" class="text-black-50"><i class="fas fa-trash"></i></a></div>
+                        </div>
+                    </div>
                     {{ form_errors(form.category) }}
                 </div>
-
-                {% if is_granted('ROLE_ADMIN') %}
-                    <div>
-                        <ul>
-                            {% if trick is defined %}
-                                {% set pathAdd = path('category_new', {slug:trick.slug}) %}
-                                {% set pathEdit = path('category_edit', {slug:trick.slug, id:0}) %}
-                                {% set pathDelete = path('category_delete', {slug:trick.slug, id:0}) %}
-                            {% else %}
-                                {% set pathAdd = path('category_new') %}
-                                {% set pathEdit = path('category_edit', {id:0}) %}
-                                {% set pathDelete = path('category_delete', {id:0}) %}
-                            {% endif %}
-                            <li><a href="{{ pathAdd }}">Ajouter</a></li>
-                            <li><a id="categoryEdit" href="{{ pathEdit }}">Modifier</a></li>
-                            <li><a id="categoryDelete" href="{{ pathDelete }}">Delete</a></li>
-                        </ul>
-                    </div>
-                {% endif %}
-
             </div>
         </div>
     </div>
@@ -139,43 +135,39 @@
         </div>
     </div>
     <br/>
-{% if is_granted('ROLE_ADMIN') %}
-    <script type="application/javascript">
-        var category = document.querySelector('#trick_category');
-        var updateCategory = document.querySelector('#categoryEdit');
-        var deleteCategory = document.querySelector('#categoryDelete');
+<script type="application/javascript">
+    var category = document.querySelector('#trick_category');
+    var updateCategory = document.querySelector('#categoryEdit');
+    var deleteCategory = document.querySelector('#categoryDelete');
 
-        var urlUpdate = updateCategory.pathname;
-        var urlDelete = deleteCategory.pathname;
+    var urlUpdate = updateCategory.pathname;
+    var urlDelete = deleteCategory.pathname;
 
-        updateCategoryEditId(category.value);
-        category.addEventListener('change', function (evt) {
-            updateCategoryEditId(evt.target.value);
+    updateCategoryEditId(category.value);
+    category.addEventListener('change', function (evt) {
+        updateCategoryEditId(evt.target.value);
+    });
+
+    function updateCategoryEditId(id) {
+        updateUrl(updateCategory, urlUpdate, id);
+        updateUrl(deleteCategory, urlDelete, id);
+    }
+
+    function updateUrl(element, url, id){
+        element.removeAttribute('href');
+        var urlSplitArr = url.split('/');
+        urlSplitArr.shift();
+        var urlMapArr = urlSplitArr.map(function(vUrl){
+            if(Number(vUrl) === 0 && vUrl !== "") {
+                return id;
+            } else {
+                return vUrl;
+            }
         });
+        element.setAttribute('href', '/' + urlMapArr.join('/').trim());
+    }
 
-        function updateCategoryEditId(id) {
-            updateUrl(updateCategory, urlUpdate, id);
-            updateUrl(deleteCategory, urlDelete, id);
-        }
-
-        function updateUrl(element, url, id){
-            element.removeAttribute('href');
-            var urlSplitArr = url.split('/');
-            urlSplitArr.shift();
-            var urlMapArr = urlSplitArr.map(function(vUrl){
-                if(Number(vUrl) === 0 && vUrl !== "") {
-                    return id;
-                } else {
-                    return vUrl;
-                }
-            });
-            element.setAttribute('href', '/' + urlMapArr.join('/').trim());
-        }
-
-    </script>
-{% endif %}
-
-
+</script>
 <script type="application/javascript">
 
     var trickResources = document.querySelector('#trick_resources');

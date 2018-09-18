@@ -44,6 +44,11 @@ class Comment
         return $this->id;
     }
 
+    public function setId($id) {
+        $this->id = $id;
+        return $this;
+    }
+    
     public function getContent(): ?string
     {
         return $this->content;

@@ -21,6 +21,12 @@ class CategoryTest extends TestCase
         $this->tricks = new ArrayCollection();
     }
     
+    public function testIfIdIsNotNull(){
+        $id = 1;
+        $this->category->setId($id);
+        $this->assertNotEmpty($this->category->getId());
+    }
+    
     public function testIfNameIsNotEmpty() {
         $name = 'flip';
         $this->category->setName($name);
@@ -43,5 +49,22 @@ class CategoryTest extends TestCase
         $trick = new Trick();
         $this->category->addTrick($trick);
         $this->assertContains($trick, $this->category->getTricks());
+    }
+    
+    public function testIfTrickHasBeenRemoved(){
+        $trick = new Trick();
+        $this->category->addTrick($trick);
+        $this->category->removeTrick($trick);
+        $this->assertNotContains($trick, $this->category->getTricks());
+    }
+    
+    public function testIfCreatedAtIsNotNull() {
+        $this->category->setCreatedAt(new \DateTime());
+        $this->assertNotNull($this->category->getCreatedAt());
+    }
+    
+    public function testIfUpdatedAtIsNotNull() {
+        $this->category->setUpdatedAt(new \DateTime());
+        $this->assertNotNull($this->category->getUpdatedAt());
     }
 }

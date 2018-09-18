@@ -15,6 +15,12 @@ class ResourceTest extends TestCase
         $this->resource = new Resource();
     }
     
+    public function testIfIdIsNotNull(){
+        $id = 1;
+        $this->resource->setId($id);
+        $this->assertNotEmpty($this->resource->getId());
+    }
+    
     public function testNameIfIsNotEmpty() {
         $name = 'superflip.jpg';
         $this->resource->setName($name);
@@ -50,4 +56,12 @@ class ResourceTest extends TestCase
         $this->resource->setPrincipal($principal);
         $this->assertEquals($principal, $this->resource->getPrincipal());
     }
+    
+    public function testIfFilenameNotEmpty(){
+        $filename = 'filename.jpg';
+        $this->resource->setFilename($filename);
+        $this->assertNotEmpty($this->resource->getFilename());
+    }
+    
+    
 }

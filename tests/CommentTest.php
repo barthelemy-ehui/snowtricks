@@ -16,7 +16,13 @@ class CommentTest extends TestCase
     {
         $this->comment = new Comment();
     }
-
+    
+    public function testIfIdIsNotNull(){
+        $id = 1;
+        $this->comment->setId($id);
+        $this->assertNotEmpty($this->comment->getId());
+    }
+    
     public function testIfContentNotEmpty()
     {
         $content = 'This is a cool flip outside down';
@@ -35,5 +41,10 @@ class CommentTest extends TestCase
         $trick = new Trick();
         $this->comment->setTrick($trick);
         $this->assertEquals($trick, $this->comment->getTrick());
+    }
+    
+    public function testIfCreatedAtIsNotNull() {
+        $this->comment->setCreatedAt(new \DateTime());
+        $this->assertNotNull($this->comment->getCreatedAt());
     }
 }

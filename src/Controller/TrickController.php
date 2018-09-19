@@ -166,7 +166,6 @@ class TrickController extends Controller
         $form = $this->createForm(TrickType::class, $trick);
         $form->handleRequest($request);
         
-        
         if($form->isSubmitted() && $form->isValid()) {
             if(!empty($trick->getResources())) {
                 /** @var Resource $resource */

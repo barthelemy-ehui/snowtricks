@@ -258,9 +258,10 @@ class Trick
         if($this->resources->count() > 0) {
             $principal = $this->getPrincipal();
             if($principal) {
-                return $principal->getName();
+                return ['type' => $principal->getType(),'name'=> $principal->getName()];
             }
-            return $this->resources->first()->getName();
+            $first  = $this->resources->first();
+            return ['type' => $first->getType(), 'name' => $first->getName()];
         }
         
         return null;

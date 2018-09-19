@@ -62,9 +62,7 @@ class ResourceController extends Controller
      */
     public function edit(Request $request, $slug, $id)
     {
-        $tmp_name = implode("",array_values($_FILES['resource']['tmp_name']));
-        $filenamePath = $tmp_name;
-        $file = new UploadedFile($filenamePath, 'tmp');
+        $file = current($request->files->get('resource'));
         $extension = $file->guessExtension();
         $filename = $this->fileUploader->upload($file);
         $filetype = $this->fileUploader->getFileType($extension);

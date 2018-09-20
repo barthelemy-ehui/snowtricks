@@ -69,7 +69,7 @@ class TrickController extends Controller
     /**
      * @Route("/", name="trick")
      */
-    public function index()
+    public function index(): \Symfony\Component\HttpFoundation\Response
     {
         return $this->render('trick/index.html.twig', [
             'tricks' => $this->trickRepository->findAll(),
@@ -78,8 +78,12 @@ class TrickController extends Controller
     
     /**
      * @Route("/trick/show/{slug}", name="show_trick")
+     * @param Request $request
+     * @param $slug
+     * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function show(Request $request, $slug) {
+    public function show(Request $request, $slug): \Symfony\Component\HttpFoundation\Response
+    {
         
         $trick = $this->trickRepository->findOneBy([
             'slug' => $slug
@@ -96,9 +100,8 @@ class TrickController extends Controller
             $comment->setUser($this->getUser());
             $comment->setCreatedAt(new \DateTime());
             $this->commentRepository->save($comment);
-            unset($comment);
-            unset($form);
-            
+            unset($comment, $form);
+    
             $comment = new Comment();
             $comment->setTrick($trick);
             $form = $this->createForm(CommentType::class, $comment);
@@ -113,6 +116,8 @@ class TrickController extends Controller
     
     /**
      * @Route("/trick/new", name="trick_new")
+     * @param Request $request
+     * @return \Symfony\Component\HttpFoundation\RedirectResponse|\Symfony\Component\HttpFoundation\Response
      */
     public function new(Request $request) {
         
@@ -137,6 +142,9 @@ class TrickController extends Controller
     
     /**
      * @Route("/trick/edit/{slug}", name="trick_edit")
+     * @param $slug
+     * @param Request $request
+     * @return \Symfony\Component\HttpFoundation\RedirectResponse|\Symfony\Component\HttpFoundation\Response
      */
     public function edit($slug, Request $request) {
         
@@ -158,7 +166,8 @@ class TrickController extends Controller
     }
     
     
-    private function AddOrEdit(Trick $trick, Request $request) {
+    private function AddOrEdit(Trick $trick, Request $request): array
+    {
     
         $trick->setUpdatedAt(new \DateTime());
         $trick->setUser($this->getUser());
@@ -177,7 +186,7 @@ class TrickController extends Controller
                         continue;
                     }
                     
-                    if(is_null($resource->getName())){ break;}
+                    if($resource->getName() === null){ break;}
                     
                     $filenamePath = $resource->getName();
                     
@@ -189,7 +198,7 @@ class TrickController extends Controller
                     $resource->setType($type);
                 }
             }
-            $trick = $this->trickRepository->save($form->getData());
+            $this->trickRepository->save($form->getData());
             return ['redirect'=>true];
         }
         
@@ -198,8 +207,11 @@ class TrickController extends Controller
     
     /**
      * @Route("/trick/delete/{slug}", name="trick_delete")
+     * @param $slug
+     * @return \Symfony\Component\HttpFoundation\RedirectResponse
      */
-    public function delete($slug){
+    public function delete($slug): \Symfony\Component\HttpFoundation\RedirectResponse
+    {
         
         /** @var Trick $trick */
         $trick = $this->trickRepository->findOneBy(['slug' => $slug]);

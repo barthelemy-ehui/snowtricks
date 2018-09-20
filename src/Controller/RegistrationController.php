@@ -7,9 +7,7 @@ use App\Form\UserType;
 use App\Repository\UserRepository;
 use App\Service\SendToken;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\Form\Extension\Core\Type\EmailType;
-use Symfony\Component\Form\Extension\Core\Type\HiddenType;
 use Symfony\Component\Form\Extension\Core\Type\PasswordType;
 use Symfony\Component\Form\Extension\Core\Type\RepeatedType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
@@ -42,9 +40,12 @@ class RegistrationController extends AbstractController
         $this->sendToken = $sendToken;
         $this->encoder = $encoder;
     }
-
+    
     /**
      * @Route("/register", name="user_registration")
+     * @param Request $request
+     * @param UserPasswordEncoderInterface $passwordEncoder
+     * @return \Symfony\Component\HttpFoundation\RedirectResponse|Response
      */
     public function register(Request $request, UserPasswordEncoderInterface $passwordEncoder)
     {
@@ -82,6 +83,8 @@ class RegistrationController extends AbstractController
     
     /**
      * @Route("/token/validate/{token}", name="token_validate")
+     * @param $token
+     * @return \Symfony\Component\HttpFoundation\RedirectResponse|Response
      */
     public function registrationValidateToken($token) {
         
@@ -101,6 +104,8 @@ class RegistrationController extends AbstractController
     
     /**
      * @Route("/renew_password", name="renew_password")
+     * @param Request $request
+     * @return \Symfony\Component\HttpFoundation\RedirectResponse|Response
      */
     public function renew(Request $request) {
         
@@ -133,9 +138,9 @@ class RegistrationController extends AbstractController
                 );
                 $this->addFlash('success','Le lien pour renouveller votre mot de passe est envoyé avec success par email.');
                 return $this->redirectToRoute('trick');
-            }else {
-                $this->addFlash('failed','Adresse e-mail inexistant');
             }
+    
+            $this->addFlash('failed','Adresse e-mail inexistant');
         }
         
         return $this->render('registration/renew.html.twig', [
@@ -145,6 +150,9 @@ class RegistrationController extends AbstractController
     
     /**
      * @Route("/token/renew/{token}", name="token_renew")
+     * @param $token
+     * @param Request $request
+     * @return \Symfony\Component\HttpFoundation\RedirectResponse|Response
      */
     public function changePassword($token, Request $request) {
         

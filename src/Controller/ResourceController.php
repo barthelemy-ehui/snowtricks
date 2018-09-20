@@ -41,8 +41,11 @@ class ResourceController extends Controller
     
     /**
      * @Route("/media/delete/{slug}/{id}", name="media_delete")
+     * @param $slug
+     * @param $id
+     * @return \Symfony\Component\HttpFoundation\RedirectResponse
      */
-    public function delete($slug, $id)
+    public function delete($slug, $id): \Symfony\Component\HttpFoundation\RedirectResponse
     {
         $trick = $this->trickRepository->findOneBy(['slug' => $slug]);
         $resource = $this->resourceRepository->findOneBy(['id' => $id]);
@@ -56,11 +59,15 @@ class ResourceController extends Controller
         ]);
         
     }
-
+    
     /**
      * @Route("/media/edit/{slug}/{id}", name="media_edit")
+     * @param Request $request
+     * @param $slug
+     * @param $id
+     * @return \Symfony\Component\HttpFoundation\RedirectResponse
      */
-    public function edit(Request $request, $slug, $id)
+    public function edit(Request $request, $slug, $id): \Symfony\Component\HttpFoundation\RedirectResponse
     {
         $file = current($request->files->get('resource'));
         $extension = $file->guessExtension();

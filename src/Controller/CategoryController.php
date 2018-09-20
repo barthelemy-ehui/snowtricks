@@ -33,6 +33,9 @@ class CategoryController extends Controller
     
     /**
      * @Route("/category/new/{slug}", name="category_new", defaults={"slug"=""})
+     * @param $slug
+     * @param Request $request
+     * @return \Symfony\Component\HttpFoundation\RedirectResponse|\Symfony\Component\HttpFoundation\Response
      */
     public function new($slug, Request $request)
     {
@@ -47,9 +50,9 @@ class CategoryController extends Controller
                     return $this->redirectToRoute('trick_edit',[
                         'slug' => $slug
                     ]);
-                } else {
-                    return $this->redirectToRoute('trick_new');
                 }
+    
+                return $this->redirectToRoute('trick_new');
             }
             
             
@@ -60,6 +63,10 @@ class CategoryController extends Controller
     
     /**
      * @Route("/category/edit/{id}/{slug}", name="category_edit", defaults={"slug"=""})
+     * @param $id
+     * @param $slug
+     * @param Request $request
+     * @return \Symfony\Component\HttpFoundation\RedirectResponse|\Symfony\Component\HttpFoundation\Response
      */
     public function edit($id,$slug, Request $request)
     {
@@ -68,16 +75,15 @@ class CategoryController extends Controller
         $category->setUser($this->userRepository->findOneBy(['id'=>1]));
         $formOrRedirect = $this->AddOrEdit($category, $request);
         if(isset($formOrRedirect['redirect']))
-            if(isset($formOrRedirect['redirect']))
-            {
-                if(!empty($slug)){
-                    return $this->redirectToRoute('trick_edit',[
-                        'slug' => $slug
-                    ]);
-                } else {
-                    return $this->redirectToRoute('trick_new');
-                }
+        {
+            if(!empty($slug)){
+                return $this->redirectToRoute('trick_edit',[
+                    'slug' => $slug
+                ]);
             }
+    
+            return $this->redirectToRoute('trick_new');
+        }
     
     
         return $this->render('category/edit.html.twig', [
@@ -87,8 +93,11 @@ class CategoryController extends Controller
     
     /**
      * @Route("/category/delete/{id}/{slug}", name="category_delete", defaults={"slug"=""})
+     * @param $id
+     * @param $slug
+     * @return \Symfony\Component\HttpFoundation\RedirectResponse
      */
-    public function delete($id, $slug)
+    public function delete($id, $slug): \Symfony\Component\HttpFoundation\RedirectResponse
     {
         try{
             $this->categoryRepository->delete($id);
@@ -102,7 +111,8 @@ class CategoryController extends Controller
         return $this->redirectToRoute('trick_new');
     }
     
-    private function AddOrEdit(Category $category, Request $request) {
+    private function AddOrEdit(Category $category, Request $request): array
+    {
         $form = $this->createForm(CategoryType::class, $category);
         $form->handleRequest($request);
         if($form->isSubmitted() && $form->isValid()) {

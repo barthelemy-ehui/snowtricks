@@ -22,9 +22,6 @@ class CategoryType extends AbstractType
             ->add('description', TextType::class, [
                 'label' => 'description'
             ])
-            // ->add('created_at')
-            // ->add('updated_at')
-            // ->add('User')
         ;
         
         $builder

@@ -22,13 +22,21 @@
         </div>
     </div>
     <br/>
-    <div class="container">
+    <div class="container d-done d-sm-none d-lg-none d-xl-none d-md-none">
+        <div class="row">
+            <div class="col mr-auto mx-auto text-center">
+                <a href="#" id="seeImages">Voir les images</a>
+            </div>
+        </div>
+    </div>
+    <div class="container d-none d-sm-block d-md-block" id="imagesContent">
         <div class="row">
             {% for resource in trick.resources if resource.principal != true %}
                 <div class="col-md-auto col-xl-auto col-sm-auto">
-                    <div class="card" style="width:225px; height:120px;">
+                    <!-- style="width:225px; height:120px;" -->
+                    <div class="card">
                         {% if  resource.type == "img" %}
-                            <img src="{{ files_directory ~ resource.name }}" width="225" height="120" style="object-fit: contain;"/>
+                            <img src="{{ files_directory ~ resource.name }}" width="225" height="120"/>
                         {% else %}
                             <video src="{{ files_directory ~ resource.name }}" width="225" height="120" controls></video>
                         {% endif %}
@@ -144,5 +152,27 @@
             });
 
         }
+
+        var seeImage = document.querySelector('#seeImages');
+        var imagesContent = document.querySelector('#imagesContent');
+        var dNone = 'd-none';
+        var dSmBlock = 'd-sm-block';
+        var dMdBlock = 'd-md-block';
+        var toggleState = false;
+        var showImagesText = 'Voir les images';
+        var hideImagesText = 'Cacher les images';
+
+        seeImage.addEventListener("click", function(evt) {
+            evt.preventDefault();
+            if(!toggleState) {
+                imagesContent.classList.remove(dNone, dSmBlock, dMdBlock);
+                evt.currentTarget.text = hideImagesText;
+                toggleState = true;
+            } else if(toggleState) {
+                imagesContent.classList.add(dNone, dSmBlock, dMdBlock);
+                toggleState = false;
+                evt.currentTarget.text = showImagesText;
+            }
+        });
     </script>
 {% endblock %}

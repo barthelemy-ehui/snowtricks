@@ -5,14 +5,16 @@
     <div class="container">
         <div class="row">
             {% for trick in tricks %}
-                <div class="col-md-auto tricks col-md col-sm">
+                <div class="col col-md-auto tricks col-md col-sm mx-auto">
                     <div class="card">
+                        <div class="mx-auto">
                         <!-- 225px/120px-->
-                        {% if  trick.getThumbnailOrDefault() and trick.getThumbnailOrDefault()['type'] == 'video' %}
-                            <video src="{{ files_directory ~ trick.getThumbnailOrDefault()['name'] }}" width="225px" height="120px" controls></video>
-                        {% else %}
-                            <img src="{{ trick.getThumbnailOrDefault() ? files_directory ~ trick.getThumbnailOrDefault()['name']:'/build/css/imgs/trick_logo.png' }}" width="225px" height="120px"/>
-                        {% endif %}
+                            {% if  trick.getThumbnailOrDefault() and trick.getThumbnailOrDefault()['type'] == 'video' %}
+                                <video src="{{ files_directory ~ trick.getThumbnailOrDefault()['name'] }}" width="225px" height="120px" controls></video>
+                            {% else %}
+                                <img src="{{ trick.getThumbnailOrDefault() ? files_directory ~ trick.getThumbnailOrDefault()['name']:'/build/css/imgs/trick_logo.png' }}" width="225px" height="120px"/>
+                            {% endif %}
+                        </div>
                         <ul class="list-inline">
                             <li class="list-inline-item">
                                 <a href="{{ path('show_trick', {slug: trick.slug}) }}">{{ trick.name }}</a>

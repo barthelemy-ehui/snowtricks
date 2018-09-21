@@ -12,12 +12,44 @@
     <body>
     <header class="container">
         <div class="row">
-                <aside class="col-2">
+            <nav class="navbar navbar-expand-sm navbar-expand-md navbar-expand-lg navbar-light col">
+                <a href="/" class="navbar-brand"><img src="/build/css/imgs/trick_logo.png" width="125px;"/></a>
+                <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+
+                <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                    <ul class="navbar-nav ml-auto">
+                        <li class="nav-item">
+                            <a href="{{ path('trick') }}" class="nav-link">Tricks</a>
+                        </li>
+                        {% if app.user %}
+                            <li class="nav-item">
+                                <a href="{{ path('user_profile') }}" class="nav-link">Profile</a>
+                            </li>
+                            <li class="nav-item">
+                                <a href="{{ path('logout') }}" class="nav-link">Se déconnecter</a>
+                            </li>
+                        {% else %}
+                            <li class="nav-item">
+                                <a href="{{ path('login') }}" class="nav-link">Se connecter</a>
+                            </li>
+                            <li class="nav-item">
+                                <a href="{{ path('user_registration') }}" class="nav-link">S'inscrire</a>
+                            </li>
+                        {% endif %}
+                    </ul>
+                </div>
+            </nav>
+        </div>
+        <!--
+        <div class="row">
+                <aside class="col-2 col-sm-2">
                     <a href="/">
                         <img src="/build/css/imgs/trick_logo.png" width="125px;"/>
                     </a>
                 </aside>
-                <nav class="col-10 nav navbar-expand-sm justify-content-end">
+                <nav class="col-10 col-sm-10 nav navbar-expand-sm justify-content-end">
                     <div class="nav-item"><a href="{{ path('trick') }}" class="nav-link">Tricks</a></div>
                     {% if app.user %}
                         <div class="nav-item"><a href="{{ path('user_profile') }}" class="nav-link">Profile</a></div>
@@ -28,7 +60,10 @@
                     {% endif %}
                 </nav>
             </div>
+          -->
     </header>
+
+
     {{ include('_helper/_messages.html.twig') }}
     {% block body %}{% endblock %}
     {% block javascripts %}{% endblock %}

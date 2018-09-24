@@ -63,13 +63,15 @@
             </div>
         </div>
     </div>
-    <div class="container">
-        <div class="row">
-            <div class="col col-xl col-md col-sm">
-                <a href="{{ path('trick_edit', {slug: trick.slug}) }}" class="float-right"><i class="fas fa-edit"></i></a>
+    {% if app.user and app.user.id == trick.user.id %}
+        <div class="container">
+            <div class="row">
+                <div class="col col-xl col-md col-sm">
+                    <a href="{{ path('trick_edit', {slug: trick.slug}) }}" class="float-right"><i class="fas fa-edit"></i></a>
+                </div>
             </div>
         </div>
-    </div>
+    {% endif %}
     <div class="container">
         <div class="row">
             <hr/>

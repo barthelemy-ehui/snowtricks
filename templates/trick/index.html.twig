@@ -19,7 +19,8 @@
                             <li class="list-inline-item">
                                 <a href="{{ path('show_trick', {slug: trick.slug}) }}">{{ trick.name }}</a>
                             </li>
-                            {% if app.user %}
+
+                            {% if app.user and app.user.id == trick.user.id %}
                                 <li class="list-inline-item">
                                     <a href="{{ path('trick_edit', {slug: trick.slug}) }}"><i class="fas fa-edit"></i></a>
                                 </li>

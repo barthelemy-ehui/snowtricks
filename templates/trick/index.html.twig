@@ -4,6 +4,14 @@
     <br/>
     <div class="container">
         <div class="row">
+            <div class="col">
+                <a href="{{ path('trick_new') }}"><i class="fas fa-plus"></i></a>
+            </div>
+        </div>
+    </div>
+    <br/>
+    <div class="container">
+        <div class="row">
             {% for trick in tricks %}
                 <div class="col col-md-auto tricks col-md col-sm mx-auto">
                     <div class="card">

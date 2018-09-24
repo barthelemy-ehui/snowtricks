@@ -2,13 +2,15 @@
 {% block title %}Figures{% endblock %}
 {% block body %}
     <br/>
-    <div class="container">
-        <div class="row">
-            <div class="col">
-                <a href="{{ path('trick_new') }}"><i class="fas fa-plus"></i></a>
+    {% if app.user %}
+        <div class="container">
+            <div class="row">
+                <div class="col">
+                    <a href="{{ path('trick_new') }}"><i class="fas fa-plus"></i></a>
+                </div>
             </div>
         </div>
-    </div>
+    {% endif %}
     <br/>
     <div class="container">
         <div class="row">

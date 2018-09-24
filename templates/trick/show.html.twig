@@ -77,7 +77,7 @@
             <hr/>
             <div class="col col-xl col-md col-sm">
                 <hr class="dropdown-divider">
-                    {{ form_start(form, {'action': '/trick/show/' ~ trick.slug, 'attr': {'novalidate': 'novalidate'} }) }}
+                    {{ form_start(form, {'action': path('show_trick', {slug:trick.slug}), 'attr': {'novalidate': 'novalidate'} }) }}
                         <div>
                             {{ form_label(form.content) }}
                             {{ form_widget(form.content,{attr: {class:'form-control'}}) }}
@@ -98,11 +98,7 @@
             {% for comment in trick.comments %}
                 <div class="col-12 comments col-xl-12 col-md-12 col-sm-12">
                     <div class="media">
-                        {% if app.user.picture %}
-                            <img class="mr-3" src="{{ files_directory ~ app.user.picture }}" width="64" height="64" alt="photo d'utilisateur">
-                        {% else %}
-                            <img class="mr-3" src="https://via.placeholder.com/64x64" width="64" height="64" alt="Photo générique">
-                        {% endif %}
+                            <img class="mr-3" src="{{ files_directory ~ comment.user.picture }}" width="64" height="64" alt="photo d'utilisateur">
                         <div class="media-body">
                             <!-- <h5 class="mt-0">Media heading</h5> -->
                             <p>{{ comment.content }}</p>

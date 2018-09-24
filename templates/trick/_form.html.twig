@@ -16,7 +16,7 @@
                     <video src="{{ files_directory ~ trick.Principal.name }}" class="video" controls></video>
                 {% endif %}
 
-                {% if app.user and app.user.id == trick.user.id %}
+                {% if app.user %}
                     <div class="edit_delete">
                         {% if trick is defined and trick.Principal is defined and trick.Principal.id is defined %}
                             <input type="file" name="resource[]" style="display:none"/>
@@ -46,7 +46,7 @@
                                     {% endif %}
                                 </div>
 
-                                {% if app.user and app.user.id == trick.user.id %}
+                                {% if app.user %}
                                     <div class="edit_delete">
                                         <input type="file" name="resource[]" style="display:none;"/>
                                         <button type="button" class="edit_resource" data-action="{{ path('media_edit', { slug: trick.slug, id: resource.id}) }}"><i class="fas fa-edit"></i></button>
@@ -74,7 +74,7 @@
                         </div>
                             <!-- a hack -->
                             <!-- {{ form_widget(form.resources) }} -->
-                            {% if app.user and app.user.id == trick.user.id %}
+                            {% if app.user %}
                                 <button type="button" id="addFile" class="hand_cursor"><i class="fas fa-plus-circle"></i></button>
                             {% endif %}
                             {{ form_errors(form.resources) }}

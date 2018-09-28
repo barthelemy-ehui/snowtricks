@@ -13,7 +13,7 @@
     <header class="container">
         <div class="row">
             <nav class="navbar navbar-expand-sm navbar-expand-md navbar-expand-lg navbar-light col">
-                <a href="/" class="navbar-brand"><img src="/build/css/imgs/trick_logo.png" width="125px;"/></a>
+                <a href="/" id="up" class="navbar-brand"><img src="/build/css/imgs/trick_logo.png" width="125px;"/></a>
                 <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
                     <span class="navbar-toggler-icon"></span>
                 </button>
@@ -65,7 +65,36 @@
 
 
     {{ include('_helper/_messages.html.twig') }}
+    <div class="container">
+        <div class="row">
+            <div class="col col-md-auto col-sm-auto mx-auto">
+                <h1>Rejoignez-nous pour une aventure hors du commun!</h1>
+                <hr class="my-auto">
+            </div>
+        </div>
+        <div class="row">
+            <div class="col">
+                <p class="float-right">
+                    <a href="#down" class="text-dark"><i class="fas fa-arrow-down"></i></a>
+                </p>
+            </div>
+        </div>
+    </div>
     {% block body %}{% endblock %}
+    <footer class="container">
+        <div class="row">
+            <div class="col-6">
+                <p class="float-left">
+                    <small>&copy;copyright 2018</small>
+                </p>
+            </div>
+            <div class="col-6">
+                <p class="float-right">
+                    <a href="#up" class="text-dark" id="down"><i class="fas fa-arrow-up"></i></a>
+                </p>
+            </div>
+        </div>
+    </footer>
     {% block javascripts %}{% endblock %}
     <script src="{{ asset('build/js/app.js') }}"></script>
     </body>

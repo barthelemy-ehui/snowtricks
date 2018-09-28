@@ -65,14 +65,17 @@ class TrickController extends Controller
         $this->userRepository = $userRepository;
         $this->resourceRepository = $resourceRepository;
     }
-    
+
     /**
-     * @Route("/", name="trick")
+     * @Route("/{page}", name="trick", defaults={"page"=1})
      */
-    public function index(): \Symfony\Component\HttpFoundation\Response
+    public function index($page): \Symfony\Component\HttpFoundation\Response
     {
+        $page = $page - 1;
+        $trickPaginator = $this->trickRepository->paginator($page);
         return $this->render('trick/index.html.twig', [
-            'tricks' => $this->trickRepository->findAll(),
+            'tricks' => $trickPaginator,
+            'currentPage' => $page + 1
         ]);
     }
     

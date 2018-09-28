@@ -4,6 +4,7 @@ namespace App\Repository;
 
 use App\Entity\Trick;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
+use Doctrine\ORM\Tools\Pagination\Paginator;
 use Symfony\Bridge\Doctrine\RegistryInterface;
 
 /**
@@ -17,6 +18,18 @@ class TrickRepository extends ServiceEntityRepository
     public function __construct(RegistryInterface $registry)
     {
         parent::__construct($registry, Trick::class);
+    }
+    
+    public function paginator($page) {
+        
+        $maxResult = 15;
+        $dql = 'SELECT t FROM App\Entity\Trick t ORDER BY t.id DESC';
+        $query = $this->_em->createQuery($dql)
+        ->setFirstResult($page*$maxResult)
+        ->setMaxResults($maxResult);
+        
+        $paginator = new Paginator($query, $fetchJoinCollection = true);
+        return $paginator;
     }
 
     public function save($data) {

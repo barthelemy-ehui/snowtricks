@@ -1,7 +1,6 @@
 {% extends 'base.html.twig' %}
 {% block title %}Figures{% endblock %}
 {% block body %}
-    <br/>
     {% if app.user %}
         <div class="container">
             <div class="row">
@@ -10,8 +9,8 @@
                 </div>
             </div>
         </div>
+        <br/>
     {% endif %}
-    <br/>
     <div class="container">
         <div class="row">
             {% for trick in tricks %}
